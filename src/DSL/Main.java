@@ -1,8 +1,8 @@
-package razrpop.DSL;
+package DSL;
 
-import razrpop.DSL.flexer.Lexer;
-import razrpop.DSL.flexer.Tokens;
-import razrpop.DSL.fparser.Parser;
+import DSL.flexer.Lexer;
+import DSL.flexer.Tokens;
+import DSL.fparser.Parser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -47,7 +47,7 @@ public class Main {
 
                 sc = null;
                 try {
-                    sc = new Scanner(new File("src/razrpop/dsl/somecode.txt"));
+                    sc = new Scanner(new File("src/DSL/somecode.txt"));
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }

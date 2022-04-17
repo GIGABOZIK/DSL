@@ -1,6 +1,6 @@
-package razrpop.DSL.fparser;
+package DSL.fparser;
 
-import razrpop.DSL.flexer.Tokens;
+import DSL.flexer.Tokens;
 
 import java.util.LinkedList;
 
