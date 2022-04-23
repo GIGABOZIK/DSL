@@ -1,5 +1,13 @@
-===========================================
-04.04.2022
+# Требования:
+* Бесконечные скобки
+* Базовые арифметические операции
+* For + While
+* LinkedList + HashSet
+
+#====================================
+# Попытки в грамматику
+#====================================
+## 04.04.2022
 
 Грамматика:
 * бесконечные скобки
@@ -21,8 +29,8 @@ lang -> expr+
             parameters -> (value SEP_COMMA)*
         func_decl -> KW_FUNC IDENT SEP_L_BRACKET parameters_list? SEP_R_BRACKET SEP_L_BRACE expr+ SEP_R_BRACE
 
-===========================================
-chursinov (Github):
+#====================================
+## chursinov (Github):
 lang -> expr+
 expr -> (if|while_do|do_while) (WHIlE LB condition RB)? ASSIGN_OP (expr_val)+ ENDLINE
 if -> IF LB condition RB
@@ -32,8 +40,8 @@ condition -> VAR COMPARISON_OP (expr_val)+
 expr_val -> value | OP_VALUE
 value -> VAR | DIGIT
 
-===========================================
-Тёма:
+#====================================
+## Тёма:
 lang -> expr+
 expr -> (expr_assign | if_op | while_op | for_op | func) NEXTCOM
 expr_assign -> VAR ASSIGN_OP expr_value
@@ -48,13 +56,8 @@ expr_br -> L_BRACKET expr_value R_BRACKET
 func -> FUNC_NAME L_BRACKET (func_param)* R_BRACKET body
 func_param -> (VAR | DIV func_param)*
 
-============================================
-СЮДА ПИСАТЬ:
-lang -> expr+
-expr -> 
-
-Пояснение:
-* Требования: Бесконечные скобки, For + While, LinkedList + HashSet
+#====================================
+## Пояснение:
 
 1) Выражения
    1) Выражение в скобках (поддержка бесконечных скобок)
@@ -63,7 +66,13 @@ expr ->
    2) Циклы
 2) Циклы
    1) Цикл for
+      1) KW for
+      2) инициализация цикла for
+      3) тело цикла
    2) Цикл while
+      1) KW while
+      2) инициализация цикла while
+      3) тело цикла
 3) Условные конструкции
    1) условие if
       1) else
@@ -115,6 +124,10 @@ while, for
 
 return
 
+#====================================
+## СЮДА ПИСАТЬ:
+lang -> expr+
+expr -> 
 
 
 
