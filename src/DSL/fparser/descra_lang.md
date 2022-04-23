@@ -36,6 +36,7 @@ expr -> declaration | stmts_block
         return -> KW_RETURN value?
     s
 
+[comment]: <> (B_NOT?)
 
 #====================================
 # Попытки в грамматику

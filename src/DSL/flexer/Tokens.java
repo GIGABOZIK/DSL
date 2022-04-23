@@ -60,6 +60,7 @@ public class Tokens {
         tokenA.put("B_AND", Pattern.compile("&")); //
         tokenA.put("B_XOR", Pattern.compile("\\^")); //
         tokenA.put("B_OR", Pattern.compile("\\|")); //
+        tokenA.put("B_NOT", Pattern.compile("!")); // * @own ************************************************************
         tokenA.put("LOGIC_AND", Pattern.compile("&&")); //
         tokenA.put("LOGIC_OR", Pattern.compile("\\|\\|")); //
         //+@    cond ? (a_if_true) : (b_if_false) // В ПАРСЕРЕ мб сделать

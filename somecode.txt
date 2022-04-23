@@ -1,5 +1,7 @@
-#Ввод 004:
+#Ввод 06:
 #commentario
-Var myVar;3
-Bool leVar=False, leBool = 17 < ((-123 + 43 ^ 1) / 25 ** a);3
-String sweet = "my string" ;3
+Var myVar
+Bool leVar=False
+myVar = 17 < ((-123 + 43 ^ 1) / 25 ** a)
+String sweet = "my string"
+while ()
