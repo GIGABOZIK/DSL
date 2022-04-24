@@ -7,7 +7,7 @@ Int myVar = ((-1234 + 43 ^ 1) / 5 ** a);3
 String sweet = "my string" ;3
 Void makeMeHappy(Int a, Int b) {
     write(a + b);3
-}
+} # some comment
 if (~leVar) {
     makeMeHappy(100500, myVar);3
     makeMeHappy(123, myVar);3

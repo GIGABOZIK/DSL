@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println(new Tokens().tokenA); // Проверка токенов
+//        System.out.println("\nРаспознаваемые токены:\n" + new Tokens().tokenA); // Проверка токенов
         Main f = new Main();
 
         // Ввод
@@ -22,17 +22,18 @@ public class Main {
         LinkedList<String> code = f.readInput();
 
         // Проверка ввода
-//        System.out.println("Your input:\n " + code);
-        int lineCnt = 0;
-        for (String line : code) System.out.println(++lineCnt + ". " + line);
+//        System.out.println("\nВведенный код:\n " + code);
+//        System.out.println("\nВведенный код:");
+//        int lineCnt = 0;
+//        for (String line : code) System.out.println(++lineCnt + ". " + line);
 
         // Работа лексера
         Lexer lxr = new Lexer(code); // Передали код лексеру
         LinkedList<Tokens.Token> tokenList = lxr.getTokens(); // Получили токены от лексера
 
         // Вывести все токены
-        System.out.println("\nTokens:\n");
-        for (Tokens.Token token : tokenList) System.out.println(token);
+//        System.out.println("\nНайденные токены:");
+//        for (Tokens.Token token : tokenList) System.out.println(token);
 
         // Работа парсера
         Parser psr = new Parser(tokenList); // Передали токены парсеру
@@ -43,8 +44,12 @@ public class Main {
     private LinkedList<String> readInput() { return readInput(-1); }
     private LinkedList<String> readInput(Integer sel) {
         switch (sel) {
+            case 0 -> {
+//                System.out.println("INPUT - CONSOLE");
+                return readInput(new Scanner(System.in));
+            }
             case 1 -> {
-                System.out.println("INPUT - FILE");
+//                System.out.println("INPUT - FILE");
                 Scanner scanFile = null;
                 try {
                     scanFile = new Scanner(new File("somecode.txt"));
@@ -52,10 +57,6 @@ public class Main {
                     e.printStackTrace();
                 }
                 return readInput(scanFile);
-            }
-            case 2 -> { // Console
-                System.out.println("INPUT - CONSOLE");
-                return readInput(new Scanner(System.in));
             }
             default -> {
                 return readInput(1);
@@ -74,43 +75,4 @@ public class Main {
         }
         return strList;
     }
-
-    /*
-    //
-    private LinkedList<String> readInput() {
-        System.out.println("Выбери тип ввода: (0 - файл, 1 - консоль)");
-        Scanner sc = new Scanner(System.in);
-        switch (sc.nextInt()) {
-            case 0 -> {
-                System.out.println("INPUT - FILE");
-
-                sc = null;
-                try {
-                    sc = new Scanner(new File("somecode.txt"));
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-            case 1 -> {
-                System.out.println("INPUT - CONSOLE");
-
-                sc = new Scanner(System.in);
-            }
-            default -> {
-                System.exit(1);
-            }
-        }
-        LinkedList<String> strList = new LinkedList<>();
-        int i = 0;
-        while (sc != null && sc.hasNextLine()) {
-            strList.add(i, sc.nextLine());
-            if (strList.get(i++).isEmpty()) {
-                strList.remove(i - 1);
-                break;
-            }
-        }
-        return strList;
-    }
-    //
-     */
 }
