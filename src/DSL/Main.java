@@ -36,7 +36,7 @@ public class Main {
 
         // Работа парсера
         Parser psr = new Parser(tokenList); // Передали токены парсеру
-        psr.start(); // СДЕЛАТЬ ЧОТА
+        psr.lang(); // СДЕЛАТЬ ЧОТА
     }
 
     // Ввод

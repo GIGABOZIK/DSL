@@ -1,4 +1,4 @@
-#Ввод 08:
+#Ввод 11:
 #commentario
 Var myVar ;3
 myVar = 3;3
