@@ -12,38 +12,71 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+        System.out.println(new Tokens().tokenA); // Проверка токенов
         Main f = new Main();
-        // f.testLexer();
-        // f.testParser();
-         f.testFull1();
-//         f.testFull2();
 
-        // * * * * * * * * *
-        // Добавить вывод номера строки и позиции в строке для лексемы
-        // * * * * * * * * *
-    }
+        // Ввод
+//        System.out.println("Выбери тип ввода: (0 - файл, 1 - консоль)");
+//        Scanner sc = new Scanner(System.in);
+//        LinkedList<String> code = f.readInput(sc.nextInt());
+        LinkedList<String> code = f.readInput();
 
-    //
-    void testFull1() {
-        LinkedList<String> code = readInput();
-        System.out.println("Your input:\n " + code); // * Проверка ввода
+        // Проверка ввода
+//        System.out.println("Your input:\n " + code);
+        int lineCnt = 0;
+        for (String line : code) System.out.println(++lineCnt + ". " + line);
 
-        Lexer lxr = new Lexer(code);
-        LinkedList<Tokens.Token> tokList = lxr.getTokens();
+        // Работа лексера
+        Lexer lxr = new Lexer(code); // Передали код лексеру
+        LinkedList<Tokens.Token> tokenList = lxr.getTokens(); // Получили токены от лексера
 
+        // Вывести все токены
         System.out.println("\nTokens:\n");
-        for (Tokens.Token token : tokList) System.out.println(token);
+        for (Tokens.Token token : tokenList) System.out.println(token);
 
-        Parser psr = new Parser(tokList);
-        psr.start();
+        // Работа парсера
+        Parser psr = new Parser(tokenList); // Передали токены парсеру
+        psr.start(); // СДЕЛАТЬ ЧОТА
     }
-    private void testFull2() {
-        new Parser(new Lexer(readInput()).getTokens()).start();
-    }
-    //
 
     // Ввод
+    private LinkedList<String> readInput() { return readInput(-1); }
+    private LinkedList<String> readInput(Integer sel) {
+        switch (sel) {
+            case 1 -> {
+                System.out.println("INPUT - FILE");
+                Scanner scanFile = null;
+                try {
+                    scanFile = new Scanner(new File("somecode.txt"));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return readInput(scanFile);
+            }
+            case 2 -> { // Console
+                System.out.println("INPUT - CONSOLE");
+                return readInput(new Scanner(System.in));
+            }
+            default -> {
+                return readInput(1);
+            }
+        }
+    }
+    private LinkedList<String> readInput(Scanner sc) {
+        LinkedList<String> strList = new LinkedList<>();
+        int i = 0;
+        while (sc != null && sc.hasNextLine()) {
+            strList.add(i, sc.nextLine());
+            if (strList.get(i++).isEmpty()) {
+                strList.remove(i - 1);
+                break;
+            }
+        }
+        return strList;
+    }
+
+    /*
+    //
     private LinkedList<String> readInput() {
         System.out.println("Выбери тип ввода: (0 - файл, 1 - консоль)");
         Scanner sc = new Scanner(System.in);
@@ -79,4 +112,5 @@ public class Main {
         return strList;
     }
     //
+     */
 }

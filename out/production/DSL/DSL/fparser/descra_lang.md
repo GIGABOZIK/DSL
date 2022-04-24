@@ -5,6 +5,45 @@
 * LinkedList + HashSet
 
 #====================================
+## СЮДА ПИСАТЬ НОРМАЛЬНЫЙ ВАРИАНТ:
+lang -> expr+
+expr -> declaration | stmt | OL_COMMENT+
+declaration -> decl_func | decl_var             ## | decl_class
+    decl_func -> (TYPE_NAME | KW_VOID) FUNC_NAME SEP_L_BRACKET param_list SEP_R_BRACKET stmts_block
+        param_list -> (TYPE_NAME IDENT)*           ## decl_var*
+    decl_var -> TYPE_NAME (IDENT | assign)
+stmts_block -> SEP_L_BRACE stmt+ SEP_R_BRACE
+    stmt -> decl_var | assign | func | ifstmt | ternary | loop | return           ## | io_console | break\KW_BREAK   + SEP_END_LINE
+        assign -> IDENT ASSIGN_OP value
+            value -> B_NOT? (IDENT | INT | STRING | func | operation | KW_LOGIC_TRUE | KW_LOGIC_FALSE | ternary)
+                func -> FUNC_NAME SEP_L_BRACKET arg_list SEP_R_BRACKET          ## (FUNC_NAME | (IDENT (SEP_DOT FUNC_NAME)*))
+                    arg_list -> value (SEP_COMMA value)*
+                operation -> bracket_optn | (optn_math | optn_bin | optn_comp)
+                    bracket_optn -> SEP_L_BRACKET operation SEP_R_BRACKET
+                    optn_math -> value math_opr value
+                        math_opr -> POW_OP | MUL_OP | DIV_OP | REM_OP | ADD_OP | SUB_OP
+                    optn_bin -> value bin_opr value
+                        bin_opr -> KW_LOGIC_AND | KW_LOGIC_OR | B_AND | B_XOR | B_OR | LOGIC_AND | LOGIC_OR
+                    optn_comp -> value comp_opr value
+                        comp_opr -> COMP_VAL | COMP_EQL
+        ifstmt -> KW_IF conditions_block stmts_block elsestmt
+            conditions_block -> SEP_L_BRACKET condition SEP_R_BRACKET
+                condition -> value
+            elsestmt -> KW_ELSE (ifstmt | stmts_block)
+        ternary -> conditions_block SEP_QUE_MARK (value | ternary) SEP_COLON (value | ternary)
+        loop -> while | for | do_while
+            while -> KW_WHILE conditions_block stmts_block
+            do_while -> KW_DO stmts_block KW_WHILE conditions_block
+            for ->  KW_FOR SEP_L_BRACKET for_init? SEP_SEMICOLON condition? SEP_SEMICOLON for_incr? SEP_R_BRACKET stmts_block
+                for_init -> TYPE_NAME? assign           ## ???
+                for_incr -> assign          ## ???
+        return -> KW_RETURN value?
+    s
+
+### ==== B_NOT ==== ? ==== B_NOT? value
+### ==== SPACE добавить везде... ==== Сделать отдельную версию на копии ==== ?
+
+#====================================
 # Попытки в грамматику
 #====================================
 ## 04.04.2022
@@ -29,32 +68,43 @@ lang -> expr+
             parameters -> (value SEP_COMMA)*
         func_decl -> KW_FUNC IDENT SEP_L_BRACKET parameters_list? SEP_R_BRACKET SEP_L_BRACE expr+ SEP_R_BRACE
 
+### Попытки в for и бесконечные скобки - Nasway:
+lang -> expr+
+expr -> init | for
+    init -> VAR ASSIGN_OP expr_value
+    for -> FOR_KW L_BRACKET (init?|value?) DIV condition? DIV init? R_BRACKET block
+        block -> (L_BRACE expr* R_BRACE) | expr
+        condition -> value (LESS | MORE | EQ) value
+        expr_value -> value (OP value)*
+            value -> VAR | DIGIT
+    br_expr -> (value OP)* L_BRACKET (br_expr|expr_value)+ R_BRACKET (OP value)*
+
 #====================================
 ## chursinov (Github):
 lang -> expr+
 expr -> (if|while_do|do_while) (WHIlE LB condition RB)? ASSIGN_OP (expr_val)+ ENDLINE
-if -> IF LB condition RB
-while_do -> WHILE LB condition RB
-do_while -> DO
-condition -> VAR COMPARISON_OP (expr_val)+
-expr_val -> value | OP_VALUE
-value -> VAR | DIGIT
+    if -> IF LB condition RB
+        condition -> VAR COMPARISON_OP (expr_val)+
+            expr_val -> value | OP_VALUE
+                value -> VAR | DIGIT
+    while_do -> WHILE LB condition RB
+    do_while -> DO
 
 #====================================
 ## Тёма:
 lang -> expr+
 expr -> (expr_assign | if_op | while_op | for_op | func) NEXTCOM
-expr_assign -> VAR ASSIGN_OP expr_value
-expr_value -> (value | expr_br) (OP value)*
-if_op -> IF L_BRACKET condition R_BRACKET body (else_op){0,1}
-body -> L_BRACE expr R_BRACE
-else_op -> ELSE body
-condition -> VAR COMP_OP value
-value -> VAR | DIGIT
-while_op -> WHILE L_BRACKET condition R_BRACKET body
-expr_br -> L_BRACKET expr_value R_BRACKET
-func -> FUNC_NAME L_BRACKET (func_param)* R_BRACKET body
-func_param -> (VAR | DIV func_param)*
+    expr_assign -> VAR ASSIGN_OP expr_value
+        expr_value -> (value | expr_br) (OP value)*
+            expr_br -> L_BRACKET expr_value R_BRACKET
+            value -> VAR | DIGIT
+    if_op -> IF L_BRACKET condition R_BRACKET body (else_op){0,1}
+        body -> L_BRACE expr R_BRACE
+            else_op -> ELSE body
+        condition -> VAR COMP_OP value
+    while_op -> WHILE L_BRACKET condition R_BRACKET body
+    func -> FUNC_NAME L_BRACKET (func_param)* R_BRACKET body
+        func_param -> (VAR | DIV func_param)*
 
 #====================================
 ## Пояснение:
@@ -123,12 +173,6 @@ math_operator
 while, for
 
 return
-
-#====================================
-## СЮДА ПИСАТЬ:
-lang -> expr+
-expr -> 
-
 
 
 

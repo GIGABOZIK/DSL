@@ -8,12 +8,12 @@ import java.util.regex.Pattern;
 public class Lexer {
     private final LinkedList<String> code;
     public static final LinkedHashMap<String, Pattern> tokenA = new Tokens().tokenA;
-
+    //
     public Lexer(LinkedList<String> code) {
         this.code = code;
     }
-
-    public LinkedList<Tokens.Token> getTokens() { // Метод поиска и возврата токенов (Можно минимизировать, но лень пока)
+    //
+    public LinkedList<Tokens.Token> getTokensOLD() { // Метод поиска и возврата токенов (Можно минимизировать, но лень пока)
         LinkedList<Tokens.Token> tokList = new LinkedList<>(); // Создали список токенов
 
         for (String strG : code) { // Перебираем элементы-строки
@@ -43,5 +43,43 @@ public class Lexer {
 //        System.out.println("\nRESULT:\n"); // *
 //        for (Token token : tokList) System.out.println(token); // *
         return tokList;
+    }
+    //
+    public LinkedList<Tokens.Token> getTokens() {
+        LinkedList<Tokens.Token> tokenList = new LinkedList<>();
+        int lineCnt = 0;
+        int linePos;
+        for (String line : code) {
+            lineCnt++;
+//            System.out.println("\n\n" + lineCnt + ". " + line); //*@
+            linePos = 0;
+            while (line.length() != linePos) {
+                int posSeek = linePos;
+                int tokenCnt = 0;
+                for (String tokenName : tokenA.keySet()) {
+                    Pattern rgxPtn = tokenA.get(tokenName);
+                    Matcher rgxMtr = rgxPtn.matcher(line);
+                    if (rgxMtr.find(posSeek)) {
+//                        System.out.println("found_0:" + tokenName + " at pos " + rgxMtr.start() + ". posSeek:" + posSeek + ", linePos:" + linePos); //*@
+                        if (rgxMtr.start() == posSeek) {
+//                            System.out.println("\nFOUND:" + tokenName + " at pos " + rgxMtr.start() + ". posSeek:" + posSeek + ", linePos:" + linePos); //*@
+                            tokenCnt++;
+                            linePos = rgxMtr.end();
+                            String tokenValue = line.substring(posSeek, linePos);
+                            Tokens.Token tokenNew = new Tokens.Token(tokenName, tokenValue, lineCnt, posSeek);
+//                            if (!tokenName.equals("SPACE")) //*@ Избегание пробелов ?...
+//                                System.out.println(tokenNew); //*@ Вывод найденного токена
+                            tokenList.add(tokenNew);
+//                            System.out.println("posSeek:" + posSeek + ", linePos:" + linePos + ", lineLength:" + line.length()); //*@
+                            break;
+                        }
+                    }
+                }
+                if (tokenCnt == 0) { //*@
+                    System.out.println("! NO TOKEN in " + lineCnt + " line at pos " + posSeek + " !");
+                }
+            }
+        }
+        return tokenList;
     }
 }

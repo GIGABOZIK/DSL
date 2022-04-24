@@ -5,16 +5,11 @@ import DSL.flexer.Tokens;
 import java.util.LinkedList;
 
 public class Parser {
-    private LinkedList<Tokens.Token> tokList;
+    private LinkedList<Tokens.Token> tokenList;
 
-    public Parser(LinkedList<Tokens.Token> tokList) {
-        this.tokList = tokList;
-    }
+    public Parser(LinkedList<Tokens.Token> tokenList) { this.tokenList = tokenList; }
 
     public void start() {
-        System.out.println("\nTokens:\n"); // temp
-        for (Tokens.Token token : tokList) System.out.println(token); // temp
-        //
 
     }
 }

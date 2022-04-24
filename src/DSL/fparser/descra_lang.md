@@ -7,14 +7,15 @@
 #====================================
 ## СЮДА ПИСАТЬ НОРМАЛЬНЫЙ ВАРИАНТ:
 lang -> expr+
-expr -> declaration | stmts_block
-    declaration -> decl_func | decl_var             ## | decl_class
-        decl_func -> (TYPE_NAME | KW_VOID) FUNC_NAME SEP_L_BRACKET param_list SEP_R_BRACKET SEP_L_BRACE stmts_block SEP_R_BRACE
-            param_list -> (TYPE_NAME IDENT)*           ## decl_var*
-        decl_var -> TYPE_NAME (IDENT | assign)
-    stmts_block -> decl_var | assign | func | ifelse | loop | return           ## | io_console | break
+expr -> declaration | stmt | OL_COMMENT+
+declaration -> decl_func | decl_var             ## | decl_class
+    decl_func -> (TYPE_NAME | KW_VOID) FUNC_NAME SEP_L_BRACKET param_list SEP_R_BRACKET stmts_block
+        param_list -> (TYPE_NAME IDENT)*           ## decl_var*
+    decl_var -> TYPE_NAME (IDENT | assign)
+stmts_block -> SEP_L_BRACE stmt+ SEP_R_BRACE
+    stmt -> decl_var | assign | func | ifstmt | ternary | loop | return           ## | io_console | break\KW_BREAK   + SEP_END_LINE
         assign -> IDENT ASSIGN_OP value
-            value -> IDENT | INT | STRING | func | operation | KW_LOGIC_TRUE | KW_LOGIC_FALSE
+            value -> B_NOT? (IDENT | INT | STRING | func | operation | KW_LOGIC_TRUE | KW_LOGIC_FALSE | ternary)
                 func -> FUNC_NAME SEP_L_BRACKET arg_list SEP_R_BRACKET          ## (FUNC_NAME | (IDENT (SEP_DOT FUNC_NAME)*))
                     arg_list -> value (SEP_COMMA value)*
                 operation -> bracket_optn | (optn_math | optn_bin | optn_comp)
@@ -25,18 +26,22 @@ expr -> declaration | stmts_block
                         bin_opr -> KW_LOGIC_AND | KW_LOGIC_OR | B_AND | B_XOR | B_OR | LOGIC_AND | LOGIC_OR
                     optn_comp -> value comp_opr value
                         comp_opr -> COMP_VAL | COMP_EQL
-        ifelse -> KW_IF SEP_L_BRACKET condition SEP_R_BRACKET SEP_L_BRACE stmts_block SEP_R_BRACE
-            condition -> value
+        ifstmt -> KW_IF conditions_block stmts_block elsestmt
+            conditions_block -> SEP_L_BRACKET condition SEP_R_BRACKET
+                condition -> value
+            elsestmt -> KW_ELSE (ifstmt | stmts_block)
+        ternary -> conditions_block SEP_QUE_MARK (value | ternary) SEP_COLON (value | ternary)
         loop -> while | for | do_while
-            while -> KW_WHILE SEP_L_BRACKET condition SEP_R_BRACKET SEP_L_BRACE stmts_block SEP_R_BRACE
-            do_while -> KW_DO SEP_L_BRACE stmts_block SEP_R_BRACE KW_WHILE SEP_L_BRACKET condition SEP_R_BRACKET
-            for ->  KW_FOR SEP_L_BRACKET for_init? SEP_SEMICOLON condition? SEP_SEMICOLON for_incr? SEP_R_BRACKET SEP_L_BRACE stmts_block SEP_R_BRACE
+            while -> KW_WHILE conditions_block stmts_block
+            do_while -> KW_DO stmts_block KW_WHILE conditions_block
+            for ->  KW_FOR SEP_L_BRACKET for_init? SEP_SEMICOLON condition? SEP_SEMICOLON for_incr? SEP_R_BRACKET stmts_block
                 for_init -> TYPE_NAME? assign           ## ???
                 for_incr -> assign          ## ???
         return -> KW_RETURN value?
     s
 
-[comment]: <> (B_NOT?)
+### ==== B_NOT ==== ? ==== B_NOT? value
+### ==== SPACE добавить везде... ==== Сделать отдельную версию на копии ==== ?
 
 #====================================
 # Попытки в грамматику
