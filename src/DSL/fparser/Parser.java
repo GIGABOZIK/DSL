@@ -27,6 +27,9 @@ public class Parser {
 
         // Чооо
         //
+//        void lang() {
+//        }
+
     }
 }
 

@@ -1,10 +1,11 @@
+___
 # Требования:
 * Бесконечные скобки
 * Базовые арифметические операции
 * For + While
 * LinkedList + HashSet
 
-#====================================
+___
 ## СЮДА ПИСАТЬ НОРМАЛЬНЫЙ ВАРИАНТ:
 lang -> expr+
 expr -> declaration | stmt | OL_COMMENT+
@@ -43,9 +44,9 @@ stmts_block -> SEP_L_BRACE stmt+ SEP_R_BRACE
 ### ==== B_NOT ==== ? ==== B_NOT? value
 ### ==== SPACE добавить везде... ==== Сделать отдельную версию на копии ==== ?
 
-#====================================
+___
 # Попытки в грамматику
-#====================================
+___
 ## 04.04.2022
 
 Грамматика:
@@ -79,7 +80,7 @@ expr -> init | for
             value -> VAR | DIGIT
     br_expr -> (value OP)* L_BRACKET (br_expr|expr_value)+ R_BRACKET (OP value)*
 
-#====================================
+___
 ## chursinov (Github):
 lang -> expr+
 expr -> (if|while_do|do_while) (WHIlE LB condition RB)? ASSIGN_OP (expr_val)+ ENDLINE
@@ -90,7 +91,7 @@ expr -> (if|while_do|do_while) (WHIlE LB condition RB)? ASSIGN_OP (expr_val)+ EN
     while_do -> WHILE LB condition RB
     do_while -> DO
 
-#====================================
+___
 ## Тёма:
 lang -> expr+
 expr -> (expr_assign | if_op | while_op | for_op | func) NEXTCOM
@@ -106,7 +107,7 @@ expr -> (expr_assign | if_op | while_op | for_op | func) NEXTCOM
     func -> FUNC_NAME L_BRACKET (func_param)* R_BRACKET body
         func_param -> (VAR | DIV func_param)*
 
-#====================================
+___
 ## Пояснение:
 
 1) Выражения

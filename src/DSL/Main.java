@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-//        System.out.println("\nРаспознаваемые токены:\n" + new Tokens().tokenA); // Проверка токенов
+        System.out.println("\nРаспознаваемые токены:\n" + new Tokens().tokenA); // Проверка токенов
         Main f = new Main();
 
         // Ввод
@@ -21,19 +21,19 @@ public class Main {
 //        LinkedList<String> code = f.readInput(sc.nextInt());
         LinkedList<String> code = f.readInput();
 
-        // Проверка ввода
+//         Проверка ввода
 //        System.out.println("\nВведенный код:\n " + code);
-//        System.out.println("\nВведенный код:");
-//        int lineCnt = 0;
-//        for (String line : code) System.out.println(++lineCnt + ". " + line);
+        System.out.println("\nВведенный код:");
+        int lineCnt = 0;
+        for (String line : code) System.out.println(++lineCnt + ". " + line);
 
         // Работа лексера
         Lexer lxr = new Lexer(code); // Передали код лексеру
         LinkedList<Tokens.Token> tokenList = lxr.getTokens(); // Получили токены от лексера
 
-        // Вывести все токены
-//        System.out.println("\nНайденные токены:");
-//        for (Tokens.Token token : tokenList) System.out.println(token);
+//         Вывести все токены
+        System.out.println("\nНайденные токены:");
+        for (Tokens.Token token : tokenList) System.out.println(token);
 
         // Работа парсера
         Parser psr = new Parser(tokenList); // Передали токены парсеру
