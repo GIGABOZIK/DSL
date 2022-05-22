@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 public class Tokens {
 
-    public LinkedHashMap<String, Pattern> tokenA = new LinkedHashMap<String, Pattern>();
+    public LinkedHashMap<String, Pattern> tokenA = new LinkedHashMap<>();
 
     {
         tokenA.put("OL_COMMENT", Pattern.compile("#.*")); // *

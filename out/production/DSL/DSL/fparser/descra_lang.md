@@ -8,7 +8,7 @@ ___
 ___
 ## СЮДА ПИСАТЬ НОРМАЛЬНЫЙ ВАРИАНТ:
 lang -> expr+
-expr -> declaration | stmt | OL_COMMENT+
+expr -> declaration | stmt | OL_COMMENT
 declaration -> decl_func | decl_var             ## | decl_class
     decl_func -> (TYPE_NAME | KW_VOID) FUNC_NAME SEP_L_BRACKET param_list SEP_R_BRACKET stmts_block
         param_list -> (TYPE_NAME IDENT)*           ## decl_var*

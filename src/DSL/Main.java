@@ -2,6 +2,7 @@ package DSL;
 
 import DSL.flexer.Lexer;
 import DSL.flexer.Tokens;
+import DSL.fparser.ParseException;
 import DSL.fparser.Parser;
 
 import java.io.File;
@@ -11,7 +12,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException {
         System.out.println("\nРаспознаваемые токены:\n" + new Tokens().tokenA); // Проверка токенов
         Main f = new Main();
 
@@ -37,7 +38,11 @@ public class Main {
 
         // Работа парсера
         Parser psr = new Parser(tokenList); // Передали токены парсеру
-        psr.lang(); // СДЕЛАТЬ ЧОТА
+        if (psr.langCheck()) { // СДЕЛАТЬ ЧОТА
+            System.out.println("Parser OK");
+        } else {
+            System.out.println("Parser HE OK");
+        }
     }
 
     // Ввод

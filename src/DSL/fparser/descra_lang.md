@@ -8,16 +8,16 @@ ___
 ___
 ## СЮДА ПИСАТЬ НОРМАЛЬНЫЙ ВАРИАНТ:
 lang -> expr+
-expr -> declaration | stmt | OL_COMMENT+
-declaration -> decl_func | decl_var             ## | decl_class
-    decl_func -> (TYPE_NAME | KW_VOID) FUNC_NAME SEP_L_BRACKET param_list SEP_R_BRACKET stmts_block
-        param_list -> (TYPE_NAME IDENT)*           ## decl_var*
+expr -> declaration | stmt | OL_COMMENT
+declaration -> decl_func | decl_var             $$ | decl_class
+    decl_func -> (TYPE_NAME | KW_VOID) FUNC_NAME SEP_L_BRACKET param_list? SEP_R_BRACKET stmts_block
+        param_list -> TYPE_NAME IDENT (SEP_COMMA param_list)?
     decl_var -> TYPE_NAME (IDENT | assign)
 stmts_block -> SEP_L_BRACE stmt+ SEP_R_BRACE
-    stmt -> decl_var | assign | func | ifstmt | ternary | loop | return           ## | io_console | break\KW_BREAK   + SEP_END_LINE
+    stmt -> decl_var | assign | func | ifstmt | ternary | loop      $$ | return | io_console | break\KW_BREAK   + SEP_END_LINE
         assign -> IDENT ASSIGN_OP value
             value -> B_NOT? (IDENT | INT | STRING | func | operation | KW_LOGIC_TRUE | KW_LOGIC_FALSE | ternary)
-                func -> FUNC_NAME SEP_L_BRACKET arg_list SEP_R_BRACKET          ## (FUNC_NAME | (IDENT (SEP_DOT FUNC_NAME)*))
+                func -> FUNC_NAME SEP_L_BRACKET arg_list SEP_R_BRACKET          $$ (FUNC_NAME | (IDENT (SEP_DOT FUNC_NAME)*))
                     arg_list -> value (SEP_COMMA value)*
                 operation -> bracket_optn | (optn_math | optn_bin | optn_comp)
                     bracket_optn -> SEP_L_BRACKET operation SEP_R_BRACKET
@@ -36,9 +36,9 @@ stmts_block -> SEP_L_BRACE stmt+ SEP_R_BRACE
             while -> KW_WHILE conditions_block stmts_block
             do_while -> KW_DO stmts_block KW_WHILE conditions_block
             for ->  KW_FOR SEP_L_BRACKET for_init? SEP_SEMICOLON condition? SEP_SEMICOLON for_incr? SEP_R_BRACKET stmts_block
-                for_init -> TYPE_NAME? assign           ## ???
-                for_incr -> assign          ## ???
-        return -> KW_RETURN value?
+                for_init -> TYPE_NAME? assign           $$ ???
+                for_incr -> assign          $$ ???
+        $$ return -> KW_RETURN value?
     s
 
 ### ==== B_NOT ==== ? ==== B_NOT? value
