@@ -1,7 +1,6 @@
 package DSL2;
 
-import DSL2.TOKENS.Token;
-import DSL2.TOKENS.TokenBase;
+import DSL2.TOKENS.*;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -14,9 +13,11 @@ public class Lexer {
 
     // Список используемых токенов
     private final LinkedHashMap<String, Pattern> baseTokenList = new TokenBase().getBaseTokenList();
-    //
+
+    public Lexer() { this.code = new CodeReader().readInput(); }
     public Lexer(ArrayList<String> code) { this.code = code; }
-    //
+
+    // Основной метод
     public ArrayList<Token> getTokens() {
         ArrayList<Token> tokenList = new ArrayList<>();
         int lineCnt = 0; // Номер текущей строки

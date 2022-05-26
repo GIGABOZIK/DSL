@@ -8,14 +8,14 @@ ___
 ___
 ## Укороченный вариант:
 * lang -> expr+
-* expr -> (assign_expr | stmt_if | loop_while | loop_for | io_console(#print)) SEP_END_LINE
+* expr -> (assign_expr | stmt_if | loop_while | loop_for | io_console(#print)) SEP_END_LINE?(не для всех)
   * assign_expr -> IDENT ASSIGN_OP value(#VarNum)
     * value -> INT(#NUM) | IDENT(#VAR) | operation (#Formula) | STRING (#??????)
   * io_console -> KW_PRINT operation(#Formula)            $$ KW_READ..
-  * loop_while -> KW_WHILE condition
-    * condition -> operation bin_opr operation
-  * loop_for ->
-  * stmt_if ->
+  * loop_while -> KW_WHILE SEP_L_BRACKET condition SEP_R_BRACKET expr...
+    * condition -> operation bin_opr operation ...
+  * loop_for -> KW_FOR ... 
+  * stmt_if -> ...
 * 
   expr_assign -> VAR ASSIGN_OP expr_value
   expr_value -> (value | expr_br) (OP value)*

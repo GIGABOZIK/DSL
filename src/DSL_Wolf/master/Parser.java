@@ -9,7 +9,7 @@ public class Parser {
     public Parser(ArrayList<Token> tokens) {
         this.tokens = tokens;
     }
-    public Token receive(String[] need) {
+    public Token receive(String[] need) { // seekToken
         Token curToken;
         if (pos<tokens.size()) {
             curToken = tokens.get(pos);
@@ -21,7 +21,7 @@ public class Parser {
         }
         return null;
     }
-    public void need(String[] expected) {
+    public void need(String[] expected) { // expect
         Token token = receive(expected);
         if (token == null) {
             throw new Error("\nНа позииции ("+pos+") ожидается "+expected[0]);
@@ -70,7 +70,7 @@ public class Parser {
         }
         return leftVal;
     }
-    public Node parseString() {
+    public Node parseString() { // parseExpr
         switch (tokens.get(pos).type.typeName) {
             case "VAR" -> {
                 Node varNode = parseVarNum(); // ->Value
@@ -138,7 +138,7 @@ public class Parser {
         need(new String[]{"END"});
         return codeStringNode;
     }
-    public RootNode parseTokens() {
+    public RootNode parseTokens() { // parseLang
         RootNode root=new RootNode();
         while (pos<tokens.size()) {
             Node codeStringNode = parseString();
