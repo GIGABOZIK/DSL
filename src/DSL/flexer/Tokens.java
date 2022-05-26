@@ -4,30 +4,29 @@ import java.util.LinkedHashMap;
 import java.util.regex.Pattern;
 
 public class Tokens {
-
     public LinkedHashMap<String, Pattern> tokenA = new LinkedHashMap<>();
 
     {
-        tokenA.put("OL_COMMENT", Pattern.compile("#.*")); // *
-        // multi_line_comment // * всякое может случиться.. а может и не случиться (:
+        tokenA.put("OL_COMMENT", Pattern.compile("#.*")); // * хз
+        // multi_line_comment // * нинада...
         //
         tokenA.put("SPACE", Pattern.compile("\s+")); // * пробелы могут и пригодиться (:
         //
 //        tokenA.put("KW_BEGIN", Pattern.compile("begin")); // * мб убрать
 //        tokenA.put("KW_END", Pattern.compile("end")); // * мб убрать
-        tokenA.put("KW_WHILE", Pattern.compile("while")); //
+        tokenA.put("KW_WHILE", Pattern.compile("while")); // $$$
         tokenA.put("KW_DO", Pattern.compile("do")); //
-        tokenA.put("KW_IF", Pattern.compile("if")); //
+        tokenA.put("KW_IF", Pattern.compile("if")); // $$$
 //        tokenA.put("KW_THEN", Pattern.compile("then")); // * мб убрать
-        tokenA.put("KW_ELSE", Pattern.compile("else")); //
-        tokenA.put("KW_FOR", Pattern.compile("for")); //
+        tokenA.put("KW_ELSE", Pattern.compile("else")); // $$$
+        tokenA.put("KW_FOR", Pattern.compile("for")); // $$$
         //+@ to
-//        tokenA.put("KW_BREAK", Pattern.compile("break")); // * own@
-        tokenA.put("KW_RETURN", Pattern.compile("return")); // * own@
+        tokenA.put("KW_BREAK", Pattern.compile("break")); // * own@
+//        tokenA.put("KW_RETURN", Pattern.compile("return")); // * own@
         tokenA.put("KW_READ", Pattern.compile("read")); // * мб убрать (NO)
         tokenA.put("KW_WRITE", Pattern.compile("write")); // * мб убрать (NO)
         //
-        tokenA.put("KW_VOID", Pattern.compile("Void")); // * own@
+//        tokenA.put("KW_VOID", Pattern.compile("Void")); // * own@
 //        tokenA.put("KW_VAR", Pattern.compile("Var")); // * мб убрать и сделать через TYPE_NAME
 //        tokenA.put("KW_BOOL", Pattern.compile("Bool")); // * аналогично
 //        tokenA.put("KW_INT", Pattern.compile("Int")); // * аналогично
@@ -40,46 +39,50 @@ public class Tokens {
         tokenA.put("KW_LOGIC_TRUE", Pattern.compile("True")); //
         tokenA.put("KW_LOGIC_FALSE", Pattern.compile("False")); //
         //
-        tokenA.put("IDENT", Pattern.compile("[a-z]([_a-zA-Z\\d])*")); // *
-        tokenA.put("INT", Pattern.compile("0|(-?[1-9](\\d)*)")); //
+        tokenA.put("IDENT", Pattern.compile("[a-z]([_a-zA-Z\\d])*")); // $$$
+        tokenA.put("INT", Pattern.compile("0|(-?[1-9](\\d)*)")); // $$$
         //+own@ числа с плавающей точкой мб добавить еще
         tokenA.put("STRING", Pattern.compile("\"(.*)\"")); //
 //        tokenA.put("FUNC_NAME", Pattern.compile("[a-z][_a-zA-Z\\d]{2,}")); // *
-        tokenA.put("TYPE_NAME", Pattern.compile("[A-Z][_a-zA-Z\\d]{2,}")); // * own@
+//        tokenA.put("TYPE_NAME", Pattern.compile("[A-Z][_a-zA-Z\\d]{2,}")); // * own@
         //сюда?@ COMMENT
         //+@ Доступ через указатель
-        tokenA.put("POW_OP", Pattern.compile("\\*\\*")); //
-        tokenA.put("MUL_OP", Pattern.compile("\\*")); //
-        tokenA.put("DIV_OP", Pattern.compile("/")); //
-        tokenA.put("REM_OP", Pattern.compile("%")); //
+//        tokenA.put("POW_OP", Pattern.compile("\\*\\*")); // *
+        tokenA.put("MUL_OP", Pattern.compile("\\*")); // $$$
+        tokenA.put("DIV_OP", Pattern.compile("/")); // $$$
+        tokenA.put("REM_OP", Pattern.compile("%")); // *
         //+@ Преобразование типа
-        tokenA.put("ADD_OP", Pattern.compile("\\+")); //
-        tokenA.put("SUB_OP", Pattern.compile("-")); //
+        tokenA.put("ADD_OP", Pattern.compile("\\+")); // $$$
+        tokenA.put("SUB_OP", Pattern.compile("-")); // $$$
         //+@ Битовый Сдвиг влево-вправо
-        tokenA.put("COMP_VAL", Pattern.compile("<=?|>=?")); //
-        tokenA.put("COMP_EQL", Pattern.compile("==|!=")); //
+        tokenA.put("COMP_LESS", Pattern.compile("<")); // $$$
+        tokenA.put("COMP_L_EQ", Pattern.compile("<="));
+        tokenA.put("COMP_MORE", Pattern.compile(">")); // $$$
+        tokenA.put("COMP_M_EQ", Pattern.compile(">="));
+        tokenA.put("COMP_EQ", Pattern.compile("==")); // $$$
+        tokenA.put("COMP_NEQ", Pattern.compile("!=")); //
         tokenA.put("B_AND", Pattern.compile("&")); //
         tokenA.put("B_XOR", Pattern.compile("\\^")); //
         tokenA.put("B_OR", Pattern.compile("\\|")); //
-        tokenA.put("B_NOT", Pattern.compile("~")); // * own@ ! или ~ ************************************************************
-        tokenA.put("LOGIC_AND", Pattern.compile("&&")); //
-        tokenA.put("LOGIC_OR", Pattern.compile("\\|\\|")); //
-        //+@    ++ -- += -=    мб добавлю.. а мб и нет..
-        tokenA.put("ASSIGN_OP", Pattern.compile("=")); //
+        tokenA.put("B_NOT", Pattern.compile("~")); // * ! или ~
+//        tokenA.put("LOGIC_AND", Pattern.compile("&&")); // *
+//        tokenA.put("LOGIC_OR", Pattern.compile("\\|\\|")); // *
+        //+@    ++ -- += -=    мб.. или нет..
+        tokenA.put("ASSIGN_OP", Pattern.compile("=")); // $$$
         //
-        tokenA.put("SEP_END_LINE", Pattern.compile("(;3)")); // * хз какой оставить и оставлять ли вообще
-//        tokenA.put("SEP_END_LINE", Pattern.compile("(;\\))")); // * хз какой оставить и оставлять ли вообще
+        tokenA.put("SEP_END_LINE", Pattern.compile("(;3)")); // * END_LINE $$$
+//        tokenA.put("SEP_END_LINE", Pattern.compile("(;\\))")); // * END_LINE
         //
-        tokenA.put("SEP_QUE_MARK", Pattern.compile("\\?")); // * own@ ************************************************************
-        tokenA.put("SEP_L_BRACKET", Pattern.compile("\\(")); //
-        tokenA.put("SEP_R_BRACKET", Pattern.compile("\\)")); //
-        tokenA.put("SEP_L_BRACE", Pattern.compile("\\{")); //
-        tokenA.put("SEP_R_BRACE", Pattern.compile("}")); //
-        tokenA.put("SEP_SEMICOLON", Pattern.compile(";\s")); //
-        tokenA.put("SEP_COLON", Pattern.compile(":")); //
+//        tokenA.put("SEP_QUE_MARK", Pattern.compile("\\?")); // * для ternary
+        tokenA.put("SEP_L_BRACKET", Pattern.compile("\\(")); // $$$
+        tokenA.put("SEP_R_BRACKET", Pattern.compile("\\)")); // $$$
+        tokenA.put("SEP_L_BRACE", Pattern.compile("\\{")); // $$$
+        tokenA.put("SEP_R_BRACE", Pattern.compile("}")); // $$$
+        tokenA.put("SEP_SEMICOLON", Pattern.compile(";\s")); // $$$
+//        tokenA.put("SEP_COLON", Pattern.compile(":")); //
         tokenA.put("SEP_COMMA", Pattern.compile(",")); //
-        tokenA.put("SEP_DOT", Pattern.compile("\\.")); //
-        tokenA.put("SEP_QUOTE", Pattern.compile("['\"]")); // * мб убрать
+//        tokenA.put("SEP_DOT", Pattern.compile("\\.")); //
+//        tokenA.put("SEP_QUOTE", Pattern.compile("['\"]")); // *
         //
     }
 
@@ -90,6 +93,7 @@ public class Tokens {
         private int line;
         private int posL;
 //        private int posR;
+        private int position;
         //
         public Token(String type, String value) {
             this.type = type;
@@ -102,20 +106,34 @@ public class Tokens {
             this.line = line;
             this.posL = posL;
         }
+        // new:
+        public Token(String type, String value, int position) {
+            this.type = type;
+            this.value = value;
+            this.position = position;
+        }
         //
         public String getType() { return type; }
         public String getValue() { return value; }
         public int getLine() { return line; }
         public int getPosL() { return posL; }
+        // new: (2)
+        public int getPosition() {
+            return position;
+        }
+        public void setPosition(int position) {
+            this.position = position;
+        }
         //
         @Override
         public String toString() {
-            return "Token{" +
+            return "Token {" +
                     "type='" + type + '\'' +
                     ", value='" + value + '\'' +
                     ", line=" + line + '\'' +
                     ", posL=" + posL + '\'' +
                     '}';
         }
+
     }
 }

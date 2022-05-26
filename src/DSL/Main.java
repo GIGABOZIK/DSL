@@ -3,7 +3,7 @@ package DSL;
 import DSL.flexer.Lexer;
 import DSL.flexer.Tokens;
 import DSL.fparser.ParseException;
-import DSL.fparser.Parser;
+import DSL.fparser.Parser2;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) throws ParseException {
-        System.out.println("\nРаспознаваемые токены:\n" + new Tokens().tokenA); // Проверка токенов
+//        System.out.println("\nРаспознаваемые токены:\n" + new Tokens().tokenA); // Проверка токенов
         Main f = new Main();
 
         // Ввод
@@ -35,13 +35,14 @@ public class Main {
 //         Вывести все токены
         System.out.println("\nНайденные токены:");
         for (Tokens.Token token : tokenList) System.out.println(token);
-
+        System.out.println("Lexer: OK");
         // Работа парсера
-        Parser psr = new Parser(tokenList); // Передали токены парсеру
+        System.out.println("\nРезультат работы парсера:");
+        Parser2 psr = new Parser2(tokenList); // Передали токены парсеру
         if (psr.langCheck()) { // СДЕЛАТЬ ЧОТА
-            System.out.println("Parser OK");
+            System.out.println("Parser: OK");
         } else {
-            System.out.println("Parser HE OK");
+            System.out.println("Parser: ERROR");
         }
     }
 

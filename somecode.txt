@@ -1,21 +1,21 @@
-#Ввод 11:
+#Ввод 13:
 #commentario
-Var myVar ;3
-myVar = 3;3
-Bool leVar=False ;3
-Int myVar = ((-1234 + 43 ^ 1) / 5 ** a);3
-String sweet = "my string" ;3
+Var myVar
+myVar = 13
+Bool leVar=False
+Int myVar = ((-1234 + 43 ^ 1) / 5 ** a)
+String sweet = "my string"
 Void makeMeHappy(Int a, Int b) {
-    write(a + b);3
+    write(a + b)
 } # some comment
 if (~leVar) {
-    makeMeHappy(100500, myVar);3
-    makeMeHappy(123, myVar);3
-    leVar = ~leVar;3
+    makeMeHappy(110, myVar)
+    leVar = ~leVar
 }
 for (Int i = 0; i < 2; i = i + 1) {
-    write(i);3
+    write(i)
 }
 while (i < 5) {
-    write(i) ;3 i = i + 1 ;3
+    write(i)
+    i = i + 1
 }
