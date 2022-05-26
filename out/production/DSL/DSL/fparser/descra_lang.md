@@ -10,7 +10,7 @@ ___
 * lang -> expr+
 * expr -> (assign_expr | stmt_if | loop_while | loop_for | io_console(#print)) SEP_END_LINE
   * assign_expr -> IDENT ASSIGN_OP value(#VarNum)
-    * value -> NUMBER(#NUM) | IDENT(#VAR) | operation (#Formula)
+    * value -> INT(#NUM) | IDENT(#VAR) | operation (#Formula) | STRING (#??????)
   * io_console -> KW_PRINT operation(#Formula)            $$ KW_READ..
   * loop_while -> KW_WHILE condition
     * condition -> operation bin_opr operation

@@ -1,21 +1,18 @@
-#Ввод 13:
-#commentario
-Var myVar
-myVar = 13
-Bool leVar=False
-Int myVar = ((-1234 + 43 ^ 1) / 5 ** a)
-String sweet = "my string"
-Void makeMeHappy(Int a, Int b) {
-    write(a + b)
-} # some comment
-if (~leVar) {
-    makeMeHappy(110, myVar)
-    leVar = ~leVar
-}
-for (Int i = 0; i < 2; i = i + 1) {
-    write(i)
-}
+#Ввод 14 (# -> commentario):
+myVar = 13 ;3
+write myVar ;3
+myVar = ((-1234 + 119 * 11) / 5) ;3
+write myVar ;3
+for (i = 0; i < 3; i = i + 1) {
+    write i ;3
+} ;3
 while (i < 5) {
-    write(i)
-    i = i + 1
-}
+    write i ;3
+    i = i + 1 ;3
+} ;3
+leVar = False ;3
+if (leVar) {
+    write ~leVar ;3
+} else {
+    write "my string" ;3
+} ;3
