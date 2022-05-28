@@ -18,10 +18,11 @@ ___
 * lang -> expr+
 * expr -> (assign_expr | stmt_if | loop_while | loop_for | io_console(#print)) SEP_END_LINE?(не для всех)
   * assign_expr -> IDENT ASSIGN_OP value
-    * value -> INT | IDENT | operation | STRING
+    * value(operation) -> INT | IDENT | STRING | op_mul_div | op_add_sub | brackets_op
+      * brackets_op -> SEP_L_BRACKET value SEP_R_BRACKET
+      * op_mul_div -> value (MUL_OP | DIV_OP) value
+      * op_add_sub -> value (ADD_OP | SUB_OP) value
   * io_console -> KW_PRINT operation            $$ KW_READ..
-    * brackets_operation -> (SEP_L_BRACKET operation SEP_R_BRACKET) | value
-      * operation -> op_mul_div | op_add_sub | value
   * stmt_loop_while -> KW_WHILE SEP_L_BRACKET condition SEP_R_BRACKET stmt_body
     * condition -> operation (comp_opr) operation
       * comp_opr -> COMP_LESS | COMP_L_EQ | COMP_MORE | COMP_M_EQ | COMP_EQ | COMP_NEQ 

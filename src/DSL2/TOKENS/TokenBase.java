@@ -50,7 +50,7 @@ public class TokenBase {
 //        baseTokenList.put("POW_OP", Pattern.compile("\\*\\*")); // *
         baseTokenList.put("MUL_OP", Pattern.compile("\\*")); // $$$
         baseTokenList.put("DIV_OP", Pattern.compile("/")); // $$$
-        baseTokenList.put("REM_OP", Pattern.compile("%")); // *
+//        baseTokenList.put("REM_OP", Pattern.compile("%")); // *
         //+@ Преобразование типа
         baseTokenList.put("ADD_OP", Pattern.compile("\\+")); // $$$
         baseTokenList.put("SUB_OP", Pattern.compile("-")); // $$$

@@ -70,13 +70,13 @@ public class Parser {
         }
         return leftVal;
     }
-    public Node parseString() { // parseExpr
+    public Node parseString() { // ->parseExpr
         switch (tokens.get(pos).type.typeName) {
             case "VAR" -> {
-                Node varNode = parseVarNum(); // ->Value
-                Token assign = receive(new String[]{"ASSIGN"}); // seekToken
+                Node varNode = parseVarNum(); // ->Иная реализация
+                Token assign = receive(new String[]{"ASSIGN"}); // ->seekToken
                 if (assign != null) {
-                    Node rightVal = parseFormula(); // ->Operation
+                    Node rightVal = parseFormula(); // ->Value
                     return new BinOpNode(assign, varNode, rightVal);
                 }
                 throw new Error("\nПосле переменной ожидается = на позиции (" + pos + ")\n");

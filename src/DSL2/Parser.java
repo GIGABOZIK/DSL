@@ -23,6 +23,10 @@ public class Parser {
                     return curToken;
                 }
             }
+            if (curToken.type().equals("OL_COMMENT")) {
+                position++;
+                return seekToken(sampleTypes);
+            }
         }
         // Если все указанные типы не подошли
         return null;
@@ -33,15 +37,11 @@ public class Parser {
         if (seekToken == null) {
 //            thrower(expected, position, tokenList.get(position));
 //            throw new Error(Arrays.toString(expected) + "\nexpected at position " + position);
-            throw new Error(Arrays.toString(expected) + "\nexpected at position " + position +
-                    "\ninstead was" + tokenList.get(position));
+            throw new Error("\n" + Arrays.toString(expected) + " expected at position " + position +
+                    ", instead was\n" + tokenList.get(position));
         }
         return seekToken;
     }
-    //
-    //
-    // getOperations() ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    //
     private void maybeEOL(Node codeChainNode) {
         // Функция определения символа конца строки (SEP_END_LINE)
         // он нужен не для всех узлов (типа for, while...)
@@ -69,35 +69,97 @@ public class Parser {
     }
     //
     private Node parseExpr() {
-        Token seekToken = expect(new String[]{"IDENT", "KW_WRITE", "KW_FOR", "KW_WHILE"});
+        Token seekToken = expect(new String[]{"IDENT", "KW_WRITE", "KW_FOR", "KW_WHILE", "OL_COMMENT"});
         switch (seekToken.type()) {
-//        switch (tokenList.get(position).type()) {
             case "IDENT" -> {
-                Node idNode = parseValue();
-                Token assign = expect(new String[]{"ASSIGN_OP"}); // seekToken?
-                    Node asValue = parseOperation();
-                    return new BinOpNode(assign, idNode, asValue);
-//                thrower(new String[]{"ASSIGN_OP"}, position, tokenList.get(position));
-            }
-            case "KW_WRITE" -> {
-                position++;
-                return new UnOpNode(tokenList.get(position - 1), parseOperation()); // this ~~~~~~~~~~~~~~~~
+                IdNode idNode = new IdNode(seekToken);
+                Token assign = expect(new String[]{"ASSIGN_OP"});
+                Node asValue = parseValue();
+                return new BinOpNode(assign, idNode, asValue);
             }
             case "KW_FOR" -> {
-                position++;
                 return parseFor();
             }
             case "KW_WHILE" -> {
-                position++;
                 return parseWhile();
+            }
+            case "KW_WRITE" -> {
+                Token string = seekToken(new String[]{"STRING"});
+                Node valueToPrint = string != null ? new StringNode(seekToken) : parseValue();
+                return new UnOpNode(seekToken, valueToPrint); // this ~~~~~~~~~~~~~~~~
             }
         }
         return null;
     }
     //
-    private Node parseValue() {
+    private Node parseValue() { // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Node leftOperand = parseOpMulDiv();
+        Token operator = seekToken(new String[]{"ADD_OP", "SUB_OP"});
+        while (operator != null) {
+            Node rightOperand = parseOpMulDiv();
+            leftOperand = new BinOpNode(operator, leftOperand, rightOperand);
+            operator = seekToken(new String[]{"ADD_OP", "SUB_OP"});
+        }
+        return leftOperand;
+    }
+    private Node parseOpMulDiv() {
+        Node leftOperand = parseBracketsOp();
+        Token operator = seekToken(new String[]{"MUL_OP", "DIV_OP"});
+        while (operator != null) {
+            Node rightOperand = parseBracketsOp();
+            leftOperand = new BinOpNode(operator, leftOperand, rightOperand);
+            operator = seekToken(new String[]{"MUL_OP", "DIV_OP"});
+        }
+        return leftOperand;
+    }
+    private Node parseBracketsOp() {
+        if (seekToken(new String[]{"SEP_L_BRACKET"}) != null) {
+            Node inner = parseValue();
+            expect(new String[]{"SEP_R_BRACKET"});
+            return inner;
+        }
+//        return parseValue();
+        Token next = expect(new String[]{"INT", "IDENT"}); // "STRING"
+        switch (next.type()) {
+            case "INT" -> { return new IntNode(next); }
+            case "IDENT" -> { return new IdNode(next); }
+        }
         return null;
     }
+    //
+    //
+    //
+    // getOperations() ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    //
+    //
+    //
+    //
+    //
+    //
+//    private Node parseValue() { // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//        Token seekToken = expect(new String[]{"INT", "IDENT", "STRING", "SEP_L_BRACKET"});
+//        switch (seekToken.type()) {
+//            case "INT" -> {
+//                Token muldiv = seekToken(new String[]{"MUL_OP", "DIV_OP"});
+//                if (muldiv != null) {
+//                     //Mul_Div_op
+//                    parseValue();
+//                }
+//                Token addsub = seekToken(new String[]{"ADD_OP", "SUB_OP"});
+//                if (addsub != null) {
+//                     //Add_Sub_op
+//                }
+//                return IntNode(seekToken);
+//            }
+//            case "IDENT" -> {
+//                return new IdNode(seekToken);
+//            }
+//            case "STRING" -> {
+//                return new StringNode(seekToken);
+//            }
+//        }
+//        return null;
+//    }
     //
     //
     //
