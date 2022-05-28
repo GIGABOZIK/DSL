@@ -1,5 +1,6 @@
 package DSL2;
 
+import DSL2.NODES.RootNode;
 import DSL2.TOKENS.Token;
 
 import java.util.ArrayList;
@@ -20,8 +21,10 @@ public class Main {
         System.out.println("\nНайденные токены:");
         for (Token token : tokenList) System.out.println(token);
         // Парсер
-
+        RootNode rootNode = new Parser(tokenList).parseLang();
+        System.out.println("Синтаксический анализ не выявил проблем!");
         // Интерпретатор
+
         //
     }
     //

@@ -9,7 +9,7 @@ public class Parser {
     public Parser(ArrayList<Token> tokens) {
         this.tokens = tokens;
     }
-    public Token receive(String[] need) { // seekToken
+    public Token receive(String[] need) { // ->seekToken
         Token curToken;
         if (pos<tokens.size()) {
             curToken = tokens.get(pos);
@@ -21,7 +21,7 @@ public class Parser {
         }
         return null;
     }
-    public void need(String[] expected) { // expect
+    public void need(String[] expected) { // ->expect
         Token token = receive(expected);
         if (token == null) {
             throw new Error("\nНа позииции ("+pos+") ожидается "+expected[0]);
@@ -39,7 +39,7 @@ public class Parser {
          
          throw new Error("\nОжидается переменная или число на позиции ("+pos+")\n");
     }
-    public Node parsePar(){
+    public Node parsePar() { // ->BracketsOp
         if (tokens.get(pos).type.typeName.equals("LPAR")){
             pos++;
             Node node = parseFormula();
@@ -49,7 +49,7 @@ public class Parser {
         else
             return parseVarNum();
     }
-    public Node parseMultDiv(){
+    public Node parseMultDiv() {
         Node leftVal = parsePar();
         Token operator = receive(new String[]{"MULT", "DIV"});
         // Парсер проходиться по "дереву"
@@ -60,7 +60,7 @@ public class Parser {
         }
         return leftVal;
     }
-    public Node parseFormula() {
+    public Node parseFormula() { // ->Operation
         Node leftVal = parseMultDiv();
         Token operator = receive(new String[]{"PLUS","MINUS"});
         while (operator != null) {
@@ -74,9 +74,9 @@ public class Parser {
         switch (tokens.get(pos).type.typeName) {
             case "VAR" -> {
                 Node varNode = parseVarNum(); // ->Value
-                Token assign = receive(new String[]{"ASSIGN"});
+                Token assign = receive(new String[]{"ASSIGN"}); // seekToken
                 if (assign != null) {
-                    Node rightVal = parseFormula(); // ->Value
+                    Node rightVal = parseFormula(); // ->Operation
                     return new BinOpNode(assign, varNode, rightVal);
                 }
                 throw new Error("\nПосле переменной ожидается = на позиции (" + pos + ")\n");
