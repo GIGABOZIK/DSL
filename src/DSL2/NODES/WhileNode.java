@@ -9,7 +9,14 @@ public class WhileNode extends Node {
     public WhileNode(Node condition) {
         this.condition = condition;
     }
-    //
+
     public void addExpr(Node expr) { exprs.add(expr); }
 
+    public Node getCondition() {
+        return condition;
+    }
+
+    public ArrayList<Node> getExprs() {
+        return exprs;
+    }
 }

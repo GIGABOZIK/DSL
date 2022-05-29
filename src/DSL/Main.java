@@ -2,8 +2,8 @@ package DSL;
 
 import DSL.flexer.Lexer;
 import DSL.flexer.Tokens;
-import DSL.fparser.ParseException;
 import DSL.fparser.Parser2;
+import DSL2.Parser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) throws ParseException {
+    public static void main(String[] args) {
 //        System.out.println("\nРаспознаваемые токены:\n" + new Tokens().tokenA); // Проверка токенов
         Main f = new Main();
 

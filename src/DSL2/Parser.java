@@ -35,17 +35,24 @@ public class Parser {
         // Функция, которая требует наличие ОБЯЗАТЕЛЬНЫХ токенs
         Token seekToken = seekToken(expected);
         if (seekToken == null) {
-//            thrower(expected, position, tokenList.get(position));
-//            throw new Error(Arrays.toString(expected) + "\nexpected at position " + position);
+            // Выброс ошибки => Остановка выполнения
             throw new Error('\n' +
                     "\nCODE:" + tokenList.get(position).line() + ':' +
                     "\n " + Arrays.toString(expected) + "\n expected at position " + position + ' ' +
                     "(after " + tokenList.get(position - 1).insteadWas() + ")" +
                     ",\n instead was [" + tokenList.get(position).insteadWas() + "]!\n");
+            // Или Исключение (НЕТ)
+//            throw new ParseException('\n' +
+//                    "\nCODE:" + tokenList.get(position).line() + ':' +
+//                    "\n " + Arrays.toString(expected) + "\n expected at position " + position + ' ' +
+//                    "(after " + tokenList.get(position - 1).insteadWas() + ")" +
+//                    ",\n instead was [" + tokenList.get(position).insteadWas() + "]!\n"
+//            );
+            //
         }
         return seekToken;
     }
-    private void maybeEOL(Node codeChainNode) {
+    private void maybeEOL(Node codeChainNode) { // НЕ НУЖНО ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         // Функция определения символа конца строки (SEP_END_LINE)
         // он нужен не для всех узлов (типа for, while...)
         String ccncName = codeChainNode.getClass().getName();
@@ -63,6 +70,7 @@ public class Parser {
         // Основной метод обработки грамматики
         RootNode rootNode = new RootNode();
         while (position < tokenList.size()) {
+
             Node codeChainNode = parseExpr();
 
 //            if (codeChainNode == null) return null;
@@ -223,38 +231,5 @@ public class Parser {
         Node rightOperand = parseValue();
         return new BinOpNode(operator, leftOperand, rightOperand);
     }
-    //
-    //
-    // OLD
-//    private Node parseValue() { // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//        Token seekToken = expect(new String[]{"INT", "IDENT", "STRING", "SEP_L_BRACKET"});
-//        switch (seekToken.type()) {
-//            case "INT" -> {
-//                Token muldiv = seekToken(new String[]{"MUL_OP", "DIV_OP"});
-//                if (muldiv != null) {
-//                     //Mul_Div_op
-//                    parseValue();
-//                }
-//                Token addsub = seekToken(new String[]{"ADD_OP", "SUB_OP"});
-//                if (addsub != null) {
-//                     //Add_Sub_op
-//                }
-//                return IntNode(seekToken);
-//            }
-//            case "IDENT" -> {
-//                return new IdNode(seekToken);
-//            }
-//            case "STRING" -> {
-//                return new StringNode(seekToken);
-//            }
-//        }
-//        return null;
-//    }
-    //
-    //
-    //
-    //
-    //
-    //
     //
 }

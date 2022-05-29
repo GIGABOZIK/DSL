@@ -12,4 +12,16 @@ public class BinOpNode extends Node {
         this.operator = operator;
         this.rightOperand = rightOperand;
     }
+
+    public Token getOperator() {
+        return operator;
+    }
+
+    public Node getLeftOperand() {
+        return leftOperand;
+    }
+
+    public Node getRightOperand() {
+        return rightOperand;
+    }
 }

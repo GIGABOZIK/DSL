@@ -10,4 +10,8 @@ public class UnOpNode extends Node {
         this.operator = operator;
         this.arg = arg;
     }
+
+    public Token getOperator() { return operator; }
+
+    public Node getArg() { return arg; }
 }
