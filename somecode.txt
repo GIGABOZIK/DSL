@@ -10,7 +10,7 @@ for (i = 0; i < 3; i = i + 1 ;3) { # ';3' нужно ставить
 while (i < 5) { # по сути, i должно продолжаться от for
     write (i) ;3 # 2 3 4
     i = i + 1 ;3
-} ;3
+}
 leVar = myVar ;3
 if (leVar >= 5000) {
     write (leVar) ;3
