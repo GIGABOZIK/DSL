@@ -14,13 +14,13 @@ public class Interpreter {
     // Основной метод
     public void execute() {
         for (Node node : rootNode.getCodeChain()) {
-//            executeNode(node);
+            executeNode(node);
 //            printNode(node); // Прост
         }
     }
 
     private void printNode(Node node) {
-        // Прост вывести все узлы
+        // Просто вывести все узлы
     }
 
     private String executeNode(Node node) {
