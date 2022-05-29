@@ -1,18 +1,19 @@
 #Ввод 14 (# -> commentario):
 myVar = 13 ;3
-write myVar ;3
-myVar = ((-1234 + 119 * 11) / 5) ;3
-write myVar ;3
-for (i = 0; i < 3; i = i + 1) {
-    write i ;3
-} ;3
-while (i < 5) {
-    write i ;3
+write myVar ;3 #13
+myVar = (-1234 + 678 * 9) / (12 + 34) * 54 ;3 #Вычисления +=+ -1000
+write myVar ;3 #5714
+write (123 + 456) ;3 #579
+for (i = 0; i < 3; i = i + 1 ;3) { # ';3' нужно ставить
+    write (i) ;3 # 0 1 2
+}
+while (i < 5) { # по сути, i должно продолжаться от for
+    write (i) ;3 # 2 3 4
     i = i + 1 ;3
-} ;3
-leVar = False ;3
-if (leVar) {
-    write ~leVar ;3
+}
+leVar = myVar ;3
+if (leVar >= 5000) {
+    write (leVar) ;3
 } else {
-    write "my string" ;3
-} ;3
+    write "leVar < 5000" ;3
+}

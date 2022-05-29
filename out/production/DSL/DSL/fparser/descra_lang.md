@@ -8,61 +8,61 @@ ___
 ___
 ## Укороченный вариант:
 * lang -> expr+
-* expr -> (assign_expr | stmt_if | loop_while | loop_for | io_console(#print)) SEP_END_LINE
-  * assign_expr -> IDENT ASSIGN_OP value(#VarNum)
-    * value -> INT(#NUM) | IDENT(#VAR) | operation (#Formula) | STRING (#??????)
-  * io_console -> KW_PRINT operation(#Formula)            $$ KW_READ..
-  * loop_while -> KW_WHILE condition
-    * condition -> operation bin_opr operation
-  * loop_for ->
-  * stmt_if ->
-* 
-  expr_assign -> VAR ASSIGN_OP expr_value
-  expr_value -> (value | expr_br) (OP value)*
-  expr_br -> L_BRACKET expr_value R_BRACKET
-  value -> VAR | DIGIT
-  if_op -> IF L_BRACKET condition R_BRACKET body (else_op){0,1}
-  body -> L_BRACE expr R_BRACE
-  else_op -> ELSE body
-  condition -> VAR COMP_OP value
-  while_op -> WHILE L_BRACKET condition R_BRACKET body
-  func -> FUNC_NAME L_BRACKET (func_param)* R_BRACKET body
-  func_param -> (VAR | DIV func_param)*
+* expr -> (assign_expr | stmt_if | loop_while | loop_for | io_console)
+  * assign_expr -> init_expr ';3'
+    * init_expr -> IDENT ASSIGN_OP value
+      * value(operation) -> INT | IDENT | STRING | op_mul_div* | op_add_sub* | brackets_op
+        * brackets_op -> '(' value ')'
+        * op_mul_div -> value (MUL_OP | DIV_OP) value
+        * op_add_sub -> value (ADD_OP | SUB_OP) value
+  * io_console -> KW_WRITE value ';3'            $$ KW_READ..
+  * stmt_loop_while -> KW_WHILE '(' condition ')' stmt_body
+    * condition -> operation (comp_opr) operation
+      * comp_opr -> COMP_LESS | COMP_L_EQ | COMP_MORE | COMP_M_EQ | COMP_EQ | COMP_NEQ 
+    * stmt_body -> '{' expr '}'
+  * stmt_loop_for -> KW_FOR '(' init(assign) ';' condition ';' expr ')' stmt_body
+  * stmt_if -> KW_IF '(' condition ')' stmt_body stmt_else?
+    * stmt_else -> KW_ELSE stmt_body
+* Упрощения:
+  * '(')' -> SEP_ _BRACKET
+  * '{'}' -> SEP_ _BRACE
+  * ';' -> SEP_SEMICOLON
+  * ';3' -> SEP_END_LINE
 
 ___
-## Длинный, почти полностью проработанный вариант:
-lang -> expr+
-expr -> declaration | stmt | OL_COMMENT
-declaration -> decl_func | decl_var             $$ | decl_class
-    decl_func -> (TYPE_NAME | KW_VOID) FUNC_NAME SEP_L_BRACKET param_list? SEP_R_BRACKET stmts_block
-        param_list -> TYPE_NAME IDENT (SEP_COMMA param_list)?
-    decl_var -> TYPE_NAME (assign | IDENT)
-stmts_block -> SEP_L_BRACE stmt+ SEP_R_BRACE
-    stmt -> decl_var | assign | func | ifstmt | ternary | loop      $$ | return | io_console | break\KW_BREAK   + SEP_END_LINE
-        assign -> IDENT ASSIGN_OP value
-            value -> B_NOT? (IDENT | INT | STRING | func | operation | KW_LOGIC_TRUE | KW_LOGIC_FALSE | ternary)
-                func -> FUNC_NAME SEP_L_BRACKET arg_list? SEP_R_BRACKET          $$ (FUNC_NAME | (IDENT (SEP_DOT FUNC_NAME)*))
-                    arg_list -> value (SEP_COMMA arg_list)?         // (SEP_COMMA value)*
-                operation -> bracket_optn | (optn_math | optn_bin | optn_comp)
-                    bracket_optn -> SEP_L_BRACKET operation SEP_R_BRACKET
-                    optn_math -> value math_opr value
-                        math_opr -> POW_OP | MUL_OP | DIV_OP | REM_OP | ADD_OP | SUB_OP
-                    optn_bin -> value bin_opr value
-                        bin_opr -> KW_LOGIC_AND | KW_LOGIC_OR | B_AND | B_XOR | B_OR | LOGIC_AND | LOGIC_OR
-                    optn_comp -> value comp_opr value
-                        comp_opr -> COMP_VAL | COMP_EQL         // Не все реализованы
-        ifstmt -> KW_IF conditions_block stmts_block elsestmt?
-            conditions_block -> SEP_L_BRACKET condition SEP_R_BRACKET
-                condition -> value
-            elsestmt -> KW_ELSE (ifstmt | stmts_block)
-        $$ ternary -> conditions_block SEP_QUE_MARK (value | ternary) SEP_COLON (value | ternary)
-        loop -> while | do_while | for
-            while -> KW_WHILE conditions_block stmts_block
-            do_while -> KW_DO stmts_block KW_WHILE conditions_block
-            for ->  KW_FOR SEP_L_BRACKET for_init? SEP_SEMICOLON condition? SEP_SEMICOLON for_incr? SEP_R_BRACKET stmts_block
-                for_init -> TYPE_NAME? assign           $$ ???
-                for_incr -> assign          $$ ???
-        $$ return -> KW_RETURN value?
+## Длинный, почти полностью проработанный вариант, но, как оказалось, труднореализуемый ((
+* lang -> expr+
+* expr -> declaration | stmt | OL_COMMENT
+* declaration -> decl_func | decl_var             $$ | decl_class
+    * decl_func -> (TYPE_NAME | KW_VOID) FUNC_NAME SEP_L_BRACKET param_list? SEP_R_BRACKET stmts_block
+        * param_list -> TYPE_NAME IDENT (SEP_COMMA param_list)?
+    * decl_var -> TYPE_NAME (assign | IDENT)
+* stmts_block -> SEP_L_BRACE stmt+ SEP_R_BRACE
+    * stmt -> decl_var | assign | func | ifstmt | ternary | loop      $$ | return | io_console | break\KW_BREAK   + SEP_END_LINE
+        * assign -> IDENT ASSIGN_OP value
+            * value -> B_NOT? (IDENT | INT | STRING | func | operation | KW_LOGIC_TRUE | KW_LOGIC_FALSE | ternary)
+                * func -> FUNC_NAME SEP_L_BRACKET arg_list? SEP_R_BRACKET          $$ (FUNC_NAME | (IDENT (SEP_DOT FUNC_NAME)*))
+                    * arg_list -> value (SEP_COMMA arg_list)?         // (SEP_COMMA value)*
+                * operation -> bracket_optn | (optn_math | optn_bin | optn_comp)
+                    * bracket_optn -> SEP_L_BRACKET operation SEP_R_BRACKET
+                    * optn_math -> value math_opr value
+                        * math_opr -> POW_OP | MUL_OP | DIV_OP | REM_OP | ADD_OP | SUB_OP
+                    * optn_bin -> value bin_opr value
+                        * bin_opr -> KW_LOGIC_AND | KW_LOGIC_OR | B_AND | B_XOR | B_OR | LOGIC_AND | LOGIC_OR
+                    * optn_comp -> value comp_opr value
+                        * comp_opr -> COMP_VAL | COMP_EQL         // Не все реализованы
+        * ifstmt -> KW_IF conditions_block stmts_block elsestmt?
+            * conditions_block -> SEP_L_BRACKET condition SEP_R_BRACKET
+                * condition -> value
+            * elsestmt -> KW_ELSE (ifstmt | stmts_block)
+        * $$ ternary -> conditions_block SEP_QUE_MARK (value | ternary) SEP_COLON (value | ternary)
+        * loop -> while | do_while | for
+            * while -> KW_WHILE conditions_block stmts_block
+            * do_while -> KW_DO stmts_block KW_WHILE conditions_block
+            * for ->  KW_FOR SEP_L_BRACKET for_init? SEP_SEMICOLON condition? SEP_SEMICOLON for_incr? SEP_R_BRACKET stmts_block
+                * for_init -> TYPE_NAME? assign           $$ ???
+                * for_incr -> assign          $$ ???
+        * $$ return -> KW_RETURN value?
     s
 
 ### ==== B_NOT ==== ? ==== B_NOT? value

@@ -7,42 +7,27 @@ ___
 
 ___
 ## Укороченный вариант:
-* Чота
-  * String -> expr
-  * VarNum -> value
-  * Par -> brackets_operation
-  * Formula -> operation
-  * print -> write
-  * VAR -> IDENT
-  * NUM -> INT
 * lang -> expr+
-* expr -> (assign_expr | stmt_if | loop_while | loop_for | io_console(#print)) SEP_END_LINE?(не для всех)
-  * assign_expr -> IDENT ASSIGN_OP value
-    * value(operation) -> INT | IDENT | STRING | op_mul_div | op_add_sub | brackets_op
-      * brackets_op -> SEP_L_BRACKET value SEP_R_BRACKET
-      * op_mul_div -> value (MUL_OP | DIV_OP) value
-      * op_add_sub -> value (ADD_OP | SUB_OP) value
-  * io_console -> KW_PRINT operation            $$ KW_READ..
-  * stmt_loop_while -> KW_WHILE SEP_L_BRACKET condition SEP_R_BRACKET stmt_body
+* expr -> (assign_expr | stmt_if | loop_while | loop_for | io_console)
+  * assign_expr -> init_expr ';3'
+    * init_expr -> IDENT ASSIGN_OP value
+      * value(operation) -> INT | IDENT | STRING | op_mul_div* | op_add_sub* | brackets_op
+        * brackets_op -> '(' value ')'
+        * op_mul_div -> value (MUL_OP | DIV_OP) value
+        * op_add_sub -> value (ADD_OP | SUB_OP) value
+  * io_console -> KW_WRITE value ';3'            $$ KW_READ..
+  * stmt_loop_while -> KW_WHILE '(' condition ')' stmt_body
     * condition -> operation (comp_opr) operation
       * comp_opr -> COMP_LESS | COMP_L_EQ | COMP_MORE | COMP_M_EQ | COMP_EQ | COMP_NEQ 
-    * stmt_body -> SEP_L_BRACE expr SEP_R_BRACE
-  * stmt_loop_for -> KW_FOR ...
-  * stmt_if -> KW_IF SEP_L_BRACKET condition SEP_R_BRACKET stmt_body stmt_else?
+    * stmt_body -> '{' expr '}'
+  * stmt_loop_for -> KW_FOR '(' init(assign) ';' condition ';' expr ')' stmt_body
+  * stmt_if -> KW_IF '(' condition ')' stmt_body stmt_else?
     * stmt_else -> KW_ELSE stmt_body
-* 
-* ****************************************
-  expr_assign -> VAR ASSIGN_OP expr_value
-  expr_value -> (value | expr_br) (OP value)*
-  expr_br -> L_BRACKET expr_value R_BRACKET
-  value -> VAR | DIGIT
-  if_op -> IF L_BRACKET condition R_BRACKET body (else_op){0,1}
-  body -> L_BRACE expr R_BRACE
-  else_op -> ELSE body
-  condition -> VAR COMP_OP value
-  while_op -> WHILE L_BRACKET condition R_BRACKET body
-  func -> FUNC_NAME L_BRACKET (func_param)* R_BRACKET body
-  func_param -> (VAR | DIV func_param)*
+* Упрощения:
+  * '(')' -> SEP_ _BRACKET
+  * '{'}' -> SEP_ _BRACE
+  * ';' -> SEP_SEMICOLON
+  * ';3' -> SEP_END_LINE
 
 ___
 ## Длинный, почти полностью проработанный вариант, но, как оказалось, труднореализуемый ((

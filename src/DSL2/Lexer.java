@@ -37,7 +37,7 @@ public class Lexer {
                             linePos = rgxMtr.end();
                             String nTokenValue = line.substring(posSeek, linePos);
                             if (!tokenName.equals("SPACE")) {//*@ Избегание пробелов ?...
-                                Token nToken = new Token(tokenName, nTokenValue, ++position);
+                                Token nToken = new Token(tokenName, nTokenValue, ++position, lineCnt);
 //                                System.out.println(tokenNew); //*@ Вывод найденного токена
                                 tokenList.add(nToken);
                             }

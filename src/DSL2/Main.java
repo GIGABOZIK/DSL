@@ -22,7 +22,7 @@ public class Main {
         for (Token token : tokenList) System.out.println(token);
         // Парсер
         RootNode rootNode = new Parser(tokenList).parseLang();
-        System.out.println("Синтаксический анализ не выявил проблем!");
+        System.out.println("\nСинтаксический анализ не выявил проблем!");
         // Интерпретатор
 
         //

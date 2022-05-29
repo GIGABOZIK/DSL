@@ -1,6 +1,6 @@
 package DSL2.TOKENS;
 
-public record Token(String type, String value, int position) {
+public record Token(String type, String value, int position, int line) {
     //
 
     //
@@ -11,9 +11,14 @@ public record Token(String type, String value, int position) {
 //                ", value='" + value + '\'' +
 //                ", position=" + position +
 //                '}';
-        return "" +
-                position +
+        return "" + position +
                 ".  '" + type + '\'' +
+                " -> '" + value + '\'' +
+                "";
+    }
+
+    public String insteadWas() {
+        return "'" + type + '\'' +
                 " -> '" + value + '\'' +
                 "";
     }

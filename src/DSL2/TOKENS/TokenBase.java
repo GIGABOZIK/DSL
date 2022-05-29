@@ -55,10 +55,10 @@ public class TokenBase {
         baseTokenList.put("ADD_OP", Pattern.compile("\\+")); // $$$
         baseTokenList.put("SUB_OP", Pattern.compile("-")); // $$$
         //+@ Битовый Сдвиг влево-вправо
-        baseTokenList.put("COMP_LESS", Pattern.compile("<")); // $$$
         baseTokenList.put("COMP_L_EQ", Pattern.compile("<="));
-        baseTokenList.put("COMP_MORE", Pattern.compile(">")); // $$$
         baseTokenList.put("COMP_M_EQ", Pattern.compile(">="));
+        baseTokenList.put("COMP_LESS", Pattern.compile("<")); // $$$
+        baseTokenList.put("COMP_MORE", Pattern.compile(">")); // $$$
         baseTokenList.put("COMP_EQ", Pattern.compile("==")); // $$$
         baseTokenList.put("COMP_NEQ", Pattern.compile("!=")); //
         baseTokenList.put("B_AND", Pattern.compile("&")); //
