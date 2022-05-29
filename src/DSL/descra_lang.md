@@ -8,21 +8,21 @@ ___
 ___
 ## Укороченный вариант:
 * lang -> expr+
-* expr -> (assign_expr | stmt_if | loop_while | loop_for | io_console)
-  * assign_expr -> init_expr ';3'
-    * init_expr -> IDENT ASSIGN_OP value
-      * value(operation) -> INT | IDENT | STRING | op_mul_div* | op_add_sub* | brackets_op
-        * brackets_op -> '(' value ')'
-        * op_mul_div -> value (MUL_OP | DIV_OP) value
-        * op_add_sub -> value (ADD_OP | SUB_OP) value
-  * io_console -> KW_WRITE value ';3'            $$ KW_READ..
-  * stmt_loop_while -> KW_WHILE '(' condition ')' stmt_body
-    * condition -> operation (comp_opr) operation
-      * comp_opr -> COMP_LESS | COMP_L_EQ | COMP_MORE | COMP_M_EQ | COMP_EQ | COMP_NEQ 
-    * stmt_body -> '{' expr '}'
-  * stmt_loop_for -> KW_FOR '(' init(assign) ';' condition ';' expr ')' stmt_body
-  * stmt_if -> KW_IF '(' condition ')' stmt_body stmt_else?
-    * stmt_else -> KW_ELSE stmt_body
+  * expr -> (assign_expr | stmt_if | loop_while | loop_for | io_console)
+    * assign_expr -> init_expr ';3'
+      * init_expr -> IDENT ASSIGN_OP value
+        * value(operation) -> INT | IDENT | STRING | op_mul_div* | op_add_sub* | brackets_op
+          * brackets_op -> '(' value ')'
+          * op_mul_div -> value (MUL_OP | DIV_OP) value
+          * op_add_sub -> value (ADD_OP | SUB_OP) value
+    * io_console -> KW_WRITE value ';3'            $$ KW_READ..
+    * stmt_loop_while -> KW_WHILE '(' condition ')' stmt_body
+      * condition -> operation (comp_opr) operation
+        * comp_opr -> COMP_LESS | COMP_L_EQ | COMP_MORE | COMP_M_EQ | COMP_EQ | COMP_NEQ 
+      * stmt_body -> '{' expr '}'
+    * stmt_loop_for -> KW_FOR '(' init(assign) ';' condition ';' expr ')' stmt_body
+    * stmt_if -> KW_IF '(' condition ')' stmt_body stmt_else?
+      * stmt_else -> KW_ELSE stmt_body
 * Упрощения:
   * '(')' -> SEP_ _BRACKET
   * '{'}' -> SEP_ _BRACE
