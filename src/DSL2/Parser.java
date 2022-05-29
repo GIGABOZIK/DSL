@@ -69,6 +69,8 @@ public class Parser {
 //            maybeEOL(codeChainNode);
 //            seekToken(new String[]{"SEP_END_LINE"}); // Определяется индивидуально
 
+//            System.out.println(codeChainNode);
+
             rootNode.addNode(codeChainNode);
         }
         // Если ошибок не было выявлено
@@ -102,8 +104,10 @@ public class Parser {
                 expect(new String[]{"SEP_END_LINE"});
                 return new UnOpNode(expectToken, valueToPrint);
             } // + KW_READ ???
+            case "OL_COMMENT" -> {
+                return parseExpr(); // сделано для пропуска OL_COMMENT и сделано в seekToken() // null
+            }
         }
-//        return parseExpr(); // сделано для пропуска OL_COMMENT и сделано в seekToken() // null
         return null; // недостижимое
     }
     //

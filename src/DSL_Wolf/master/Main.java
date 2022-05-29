@@ -44,6 +44,7 @@ public class Main {
 		Interpreter interpreter = new Interpreter();
 		for(int i = 0; i < root.codeStr.size(); i++) {
 			interpreter.run(root.codeStr.get(i));
+//			System.out.println(root.codeStr.get(i));
 		}
 		/*
 		* Interpreter itprt = new Interpreter(root);

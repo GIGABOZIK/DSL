@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        main1();
+        main2();
     }
     //
     public static void main1() {
@@ -25,13 +25,15 @@ public class Main {
         System.out.println("\nСинтаксический анализ не выявил проблем!");
         // Интерпретатор
 
+        System.out.println("Результат работы программы:");
+        new Interpreter(rootNode).execute();
         //
     }
     //
-    public static void main2(String[] args) {
-        // Сразу результат по стандартным параметрам
-//        new Lexer().getTokens();
+    public static void main2() {
+        // Сразу результат по стандартным параметрам (чтение из файла)
+//        for (Token token : new Lexer().getTokens()) System.out.println(token);
 //        new Parser().parseLang();
-//        new Exegete().execute();
+        new Interpreter().execute();
     }
 }
