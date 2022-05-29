@@ -32,7 +32,7 @@ public class Parser {
         return null;
     }
     private Token expect(String[] expected) {
-        // Функция, которая требует наличие обязательных токенs
+        // Функция, которая требует наличие ОБЯЗАТЕЛЬНЫХ токенs
         Token seekToken = seekToken(expected);
         if (seekToken == null) {
 //            thrower(expected, position, tokenList.get(position));
@@ -55,7 +55,7 @@ public class Parser {
                 | ccncName.equals("IfElseNode")
         )) expect(new String[]{"SEP_END_LINE"});
 //        else
-            // Но его наличие - не проблема
+            // Но его наличие - не проблема \\\ НЕТ - ПРОБЛЕМА ((: .. Лучше следовать стандарту
 //            seekToken(new String[]{"SEP_END_LINE"});
     }
     // Основной метод
@@ -104,7 +104,7 @@ public class Parser {
             } // + KW_READ ???
         }
 //        return parseExpr(); // сделано для пропуска OL_COMMENT и сделано в seekToken() // null
-        return null;
+        return null; // недостижимое
     }
     //
     private Node parseInit() {
@@ -113,7 +113,7 @@ public class Parser {
         Node asValue = parseValue();
         return new BinOpNode(assign, idNode, asValue);
     }
-    private Node parseValue() { // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    private Node parseValue() {
         // Организовано в порядке приоритета операций:
         // * Возвращает операцию слож-выч,
         // * * либо операцию умн-дел,
@@ -158,7 +158,7 @@ public class Parser {
             case "INT" -> { return new IntNode(expectToken); }
             case "IDENT" -> { return new IdNode(expectToken); }
         }
-        return null;
+        return null; // недостижимое
     }
     //
     private Node parseLoopFor() {
@@ -221,7 +221,7 @@ public class Parser {
     }
     //
     //
-    //
+    // OLD
 //    private Node parseValue() { // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //        Token seekToken = expect(new String[]{"INT", "IDENT", "STRING", "SEP_L_BRACKET"});
 //        switch (seekToken.type()) {
