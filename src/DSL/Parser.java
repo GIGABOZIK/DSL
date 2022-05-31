@@ -100,6 +100,7 @@ public class Parser {
     }
     //
     private Node parseInit() {
+        // init_expr -> IDENT ASSIGN_OP value
         IdNode idNode = new IdNode(expect(new String[]{"IDENT"}));
         Token assign = expect(new String[]{"ASSIGN_OP"});
         Node asValue = parseValue();
@@ -110,6 +111,8 @@ public class Parser {
         return parseValue(operations, Arrays.asList(operations).indexOf(select));
     }
     private Node parseValue() {
+        // value -> Compare | Condition | AddSub | MulDiv | Brackets | UnValue
+        //
         // Организовано в порядке приоритета операций:
         // * Возвращает операцию сравнения,
         // * * либо операцию слож-выч,
@@ -121,7 +124,8 @@ public class Parser {
     HashMap<String, String[]> operators = new HashMap<>();
     {
         operators.put("Compare", new String[]{"COMP_LESS", "COMP_L_EQ", "COMP_MORE", "COMP_M_EQ", "COMP_EQ", "COMP_NEQ"});
-        operators.put("Condition", new String[]{"COMP_LESS", "COMP_L_EQ", "COMP_MORE", "COMP_M_EQ", "COMP_EQ", "COMP_NEQ"});
+//        operators.put("Condition", new String[]{"COMP_LESS", "COMP_L_EQ", "COMP_MORE", "COMP_M_EQ", "COMP_EQ", "COMP_NEQ"});
+        operators.put("Condition", operators.get("Compare"));
         operators.put("AddSub", new String[]{"ADD_OP", "SUB_OP"});
         operators.put("MulDiv", new String[]{"MUL_OP", "DIV_OP"});
 //        operators.put("Brackets", new String[]{"SEP_L_BRACKET", "SEP_R_BRACKET"});
@@ -240,6 +244,7 @@ public class Parser {
 //    }
     //
     private Node parseLoopFor() {
+        // stmt_loop_for -> KW_FOR '(' Init ';' Condition ';' expr ')' stmt_body
         expect(new String[]{"SEP_L_BRACKET"});
         Node init = parseInit();
         expect(new String[]{"SEP_SEMICOLON"});
@@ -259,6 +264,7 @@ public class Parser {
         return forNode;
     }
     private Node parseLoopWhile() {
+        // stmt_loop_while -> KW_WHILE '(' condition ')' stmt_body
         expect(new String[]{"SEP_L_BRACKET"});
 //        Node condition = parseCondition();
         Node condition = parseValue("Condition");
@@ -273,6 +279,8 @@ public class Parser {
         return whileNode;
     }
     private Node parseStmtIf() {
+        // stmt_if -> KW_IF '(' condition ')' stmt_body stmt_else?
+        // stmt_else -> KW_ELSE stmt_body
         expect(new String[]{"SEP_L_BRACKET"});
         Node condition = parseValue("Condition");
         expect(new String[]{"SEP_R_BRACKET"});
