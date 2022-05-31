@@ -1,4 +1,4 @@
-package DSL_Wolf.master;
+package Notes.DSL_Wolf.master;
 import java.io.FileReader;
 import java.io.IOException;
 public class Main {
@@ -17,7 +17,7 @@ public class Main {
 
 	public static String checkFile(){
 		String code="";
-		try(FileReader reader = new FileReader("src/DSL_Wolf/Code.txt"))
+		try(FileReader reader = new FileReader("src/Notes.DSL_Wolf/Code.txt"))
 		{
 			int c;
 			while((c=reader.read())!=-1){

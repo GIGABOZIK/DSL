@@ -1,4 +1,4 @@
-package DSL_Wolf.master;
+package Notes.DSL_Wolf.master;
 
 import java.util.ArrayList;
 

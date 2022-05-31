@@ -1,4 +1,4 @@
-package DSL_Wolf.master;
+package Notes.DSL_Wolf.master;
 
 public class BinOpNode extends Node {
     Token operator;

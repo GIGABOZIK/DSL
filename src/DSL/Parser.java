@@ -5,10 +5,11 @@ import DSL.TOKENS.Token;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class Parser {
     ArrayList<Token> tokenList;
-    int position = 0;
+    int position = 0; // Позиция в списке токенов
 
     public Parser() { this.tokenList = new Lexer().getTokens(); }
     public Parser(ArrayList<Token> tokenList) { this.tokenList = tokenList; }
@@ -52,33 +53,14 @@ public class Parser {
         }
         return seekToken;
     }
-    private void maybeEOL(Node codeChainNode) { // НЕ НУЖНО ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        // Функция определения символа конца строки (SEP_END_LINE)
-        // он нужен не для всех узлов (типа for, while...)
-        String ccncName = codeChainNode.getClass().getName();
-        if (!(
-                ccncName.equals("ForNode")
-                | ccncName.equals("WhileNode")
-                | ccncName.equals("IfElseNode")
-        )) expect(new String[]{"SEP_END_LINE"});
-//        else
-            // Но его наличие - не проблема \\\ НЕТ - ПРОБЛЕМА ((: .. Лучше следовать стандарту
-//            seekToken(new String[]{"SEP_END_LINE"});
-    }
     // Основной метод
     public RootNode parseLang() {
         // Основной метод обработки грамматики
+        // lang -> expr+
         RootNode rootNode = new RootNode();
         while (position < tokenList.size()) {
-
             Node codeChainNode = parseExpr();
-
-//            if (codeChainNode == null) return null;
-//            maybeEOL(codeChainNode);
-//            seekToken(new String[]{"SEP_END_LINE"}); // Определяется индивидуально
-
 //            System.out.println(codeChainNode);
-
             rootNode.addNode(codeChainNode);
         }
         // Если ошибок не было выявлено
@@ -86,9 +68,10 @@ public class Parser {
     }
     //
     private Node parseExpr() {
-        Token expectToken = expect(new String[]{"IDENT", "KW_WRITE", "KW_FOR", "KW_WHILE", "KW_IF", "OL_COMMENT"});
+        // expr -> assign_expr | loop_for | loop_while | stmt_if | io_console
+        Token expectToken = expect(new String[]{"IDENT", "KW_WRITE", "KW_FOR", "KW_WHILE", "KW_IF"});//, "OL_COMMENT"});
         switch (expectToken.type()) {
-            case "IDENT" -> { // assign_expr
+            case "IDENT" -> { // assign_expr -> init_expr ';3'
                 position--;
                 Node assign_expr = parseInit();
                 expect(new String[]{"SEP_END_LINE"});
@@ -103,21 +86,17 @@ public class Parser {
             case "KW_IF" -> { // stmt_if
                 return parseStmtIf();
             }
-            case "KW_WRITE" -> { // io_console
-//                expect(new String[]{"SEP_L_BRACKET"});
-//                Token string = seekToken(new String[]{"STRING"}); // Строки обрабатывать отдельно
-//                Node valueToPrint = (string != null) ? new StringNode(string) : parseValue();
+            case "KW_WRITE" -> { // io_console -> KW_WRITE value ';3'
                 Node valueToPrint = parseValue();
-//                expect(new String[]{"SEP_R_BRACKET"});
                 expect(new String[]{"SEP_END_LINE"});
                 return new UnOpNode(expectToken, valueToPrint);
             } // + KW_READ ???
-            default -> {
-//            case "OL_COMMENT" -> {
-                return parseExpr(); // сделано для пропуска OL_COMMENT и сделано в seekToken() // null
-            }
+//            default -> { // case "OL_COMMENT" -> {
+//                return parseExpr(); // сделано для пропуска OL_COMMENT
+//                // Еще сделано в seekToken(), поэтому тут не нужно
+//            }
         }
-//        return null; // недостижимое
+        return null; // недостижимое
     }
     //
     private Node parseInit() {
@@ -126,78 +105,146 @@ public class Parser {
         Node asValue = parseValue();
         return new BinOpNode(assign, idNode, asValue);
     }
+    private Node parseValue(String select) {
+        String[] operations = new String[] {"Compare", "AddSub", "MulDiv", "Brackets", "UnVal", "Condition"};
+        return parseValue(operations, Arrays.asList(operations).indexOf(select));
+    }
     private Node parseValue() {
         // Организовано в порядке приоритета операций:
-        // * Возвращает сравнение, либо:
+        // * Возвращает операцию сравнения,
+        // * * либо операцию слож-выч,
+        // * * * либо операцию умн-дел,
+        // * * * * либо узел в скобках,
+        // * * * * * либо одиночное значение
+        return parseValue(new String[]{"Compare", "AddSub", "MulDiv", "Brackets", "UnVal", "Condition"}, 0);
+    }
+    HashMap<String, String[]> operators = new HashMap<>();
+    {
+        operators.put("Compare", new String[]{"COMP_LESS", "COMP_L_EQ", "COMP_MORE", "COMP_M_EQ", "COMP_EQ", "COMP_NEQ"});
+        operators.put("Condition", new String[]{"COMP_LESS", "COMP_L_EQ", "COMP_MORE", "COMP_M_EQ", "COMP_EQ", "COMP_NEQ"});
+        operators.put("AddSub", new String[]{"ADD_OP", "SUB_OP"});
+        operators.put("MulDiv", new String[]{"MUL_OP", "DIV_OP"});
+//        operators.put("Brackets", new String[]{"SEP_L_BRACKET", "SEP_R_BRACKET"});
+        operators.put("UnVal", new String[]{"INT", "IDENT", "STRING"});
+    }
+    private Node parseValue(String[] expected, int select) {
+        String op = expected[select];
+        switch (op) {
+            case "Compare", "AddSub", "MulDiv" -> { // Compare ?? a > b > c > d...
+                Node leftOperand = parseValue(expected, select + 1);
+                Token operator = seekToken(operators.get(op));
+                while (operator != null) {
+                    Node rightOperand = parseValue(expected, select + 1);
+                    leftOperand = new BinOpNode(operator, leftOperand, rightOperand);
+                    operator = seekToken(operators.get(op));
+                }
+                return leftOperand;
+            }
+            case "Brackets" -> {
+                if (seekToken(new String[]{"SEP_L_BRACKET"}) != null) {
+                    Node inner = parseValue();
+                    expect(new String[]{"SEP_R_BRACKET"});
+                    return inner;
+                }
+                return parseValue(expected, select + 1);
+            }
+            case "UnVal" -> {
+                Token expectToken = expect(operators.get(op));
+                switch (expectToken.type()) {
+                    case "INT" -> { return new IntNode(expectToken); }
+                    case "IDENT" -> { return new IdNode(expectToken); }
+                    case "STRING" -> { return new StringNode(expectToken); }
+                }
+            }
+            case "Condition" -> {
+                Node leftOperand = parseValue("AddSub");
+                Token operator = expect(operators.get(op));
+                Node rightOperand = parseValue("AddSub");
+                return new BinOpNode(operator, leftOperand, rightOperand);
+            }
+            case "CompareOLD" -> {
+                Node leftOperand = parseValue(expected, select + 1);
+                Token operator = seekToken(operators.get(op));
+                if (operator != null) {
+                    Node rightOperand = parseValue(expected, select + 1);
+                    leftOperand = new BinOpNode(operator, leftOperand, rightOperand);
+                }
+                return leftOperand;
+            }
+        }
+        return null;
+    }
+//    private Node parseValueOLD() {
+        // Организовано в порядке приоритета операций:
+        // * Возвращает операцию сравнения,
+        // * * либо операцию слож-выч,
+        // * * * либо операцию умн-дел,
+        // * * * * либо узел в скобках,
+        // * * * * * либо одиночное значение
+//        Node leftOperand = parseOpAddSub();
+//        Token operator = seekToken(new String[]{"COMP_LESS", "COMP_L_EQ", "COMP_MORE", "COMP_M_EQ", "COMP_EQ", "COMP_NEQ"});
+//        while (operator != null) {
+//            Node rightOperand = parseOpAddSub();
+//            leftOperand = new BinOpNode(operator, leftOperand, rightOperand);
+//            operator = seekToken(new String[]{"COMP_LESS", "COMP_L_EQ", "COMP_MORE", "COMP_M_EQ", "COMP_EQ", "COMP_NEQ"});
+//        }
+//        return leftOperand;
+//    }
+//    private Node parseOpAddSub() {
         // * Возвращает операцию слож-выч,
         // * * либо операцию умн-дел,
         // * * * либо узел в скобках,
         // * * * * либо одиночное значение
-        Node leftOperand = parseOpAddSub();
 //        Node leftOperand = parseOpMulDiv();
-        Token operator = seekToken(new String[]{"COMP_LESS", "COMP_L_EQ", "COMP_MORE", "COMP_M_EQ", "COMP_EQ", "COMP_NEQ"});
-        while (operator != null) {
-            Node rightOperand = parseOpAddSub();
+//        Token operator = seekToken(new String[]{"ADD_OP", "SUB_OP"});
+//        while (operator != null) {
 //            Node rightOperand = parseOpMulDiv();
-            leftOperand = new BinOpNode(operator, leftOperand, rightOperand);
-            operator = seekToken(new String[]{"COMP_LESS", "COMP_L_EQ", "COMP_MORE", "COMP_M_EQ", "COMP_EQ", "COMP_NEQ"});
-        }
-        return leftOperand;
-    }
-    private Node parseOpAddSub() {
-        // * Возвращает операцию слож-выч,
-        // * * либо операцию умн-дел,
-        // * * * либо узел в скобках,
-        // * * * * либо одиночное значение
-        Node leftOperand = parseOpMulDiv();
-        Token operator = seekToken(new String[]{"ADD_OP", "SUB_OP"});
-        while (operator != null) {
-            Node rightOperand = parseOpMulDiv();
-            leftOperand = new BinOpNode(operator, leftOperand, rightOperand);
-            operator = seekToken(new String[]{"ADD_OP", "SUB_OP"});
-        }
-        return leftOperand;
-    }
-    private Node parseOpMulDiv() {
+//            leftOperand = new BinOpNode(operator, leftOperand, rightOperand);
+//            operator = seekToken(new String[]{"ADD_OP", "SUB_OP"});
+//        }
+//        return leftOperand;
+//    }
+//    private Node parseOpMulDiv() {
         // * Возвращает операцию умн-дел,
         // * * либо узел в скобках,
         // * * * либо одиночное значение
-        Node leftOperand = parseBracketsOp();
-        Token operator = seekToken(new String[]{"MUL_OP", "DIV_OP"});
-        while (operator != null) {
-            Node rightOperand = parseBracketsOp();
-            leftOperand = new BinOpNode(operator, leftOperand, rightOperand);
-            operator = seekToken(new String[]{"MUL_OP", "DIV_OP"});
-        }
-        return leftOperand;
-    }
-    private Node parseBracketsOp() {
+//        Node leftOperand = parseBracketsOp();
+//        Token operator = seekToken(new String[]{"MUL_OP", "DIV_OP"});
+//        while (operator != null) {
+//            Node rightOperand = parseBracketsOp();
+//            leftOperand = new BinOpNode(operator, leftOperand, rightOperand);
+//            operator = seekToken(new String[]{"MUL_OP", "DIV_OP"});
+//        }
+//        return leftOperand;
+//    }
+//    private Node parseBracketsOp() {
         // * Возвращает узел в скобках,
         // * * либо одиночное значение
-        if (seekToken(new String[]{"SEP_L_BRACKET"}) != null) {
-            Node inner = parseValue();
-            expect(new String[]{"SEP_R_BRACKET"});
-            return inner;
-        }
-        return parseUnValue();
-    }
-    private Node parseUnValue() { // ТОЛЬКО INT, IDENT ??
+//        if (seekToken(new String[]{"SEP_L_BRACKET"}) != null) {
+//            Node inner = parseValue();
+//            expect(new String[]{"SEP_R_BRACKET"});
+//            return inner;
+//        }
+//        return parseUnValue();
+//    }
+//    private Node parseUnValue() { // ТОЛЬКО INT, IDENT ??
         // * Возвращает одиночное значение
-        Token expectToken = expect(new String[]{"INT", "IDENT", "STRING"});
-        if (expectToken.type().equals("STRING")) System.out.println("String: " + expectToken.value());
-        switch (expectToken.type()) {
-            case "INT" -> { return new IntNode(expectToken); }
-            case "IDENT" -> { return new IdNode(expectToken); }
-            case "STRING" -> { return new StringNode(expectToken); }
-        }
-        return null; // недостижимое
-    }
+//        Token expectToken = expect(new String[]{"INT", "IDENT", "STRING"});
+//        if (expectToken.type().equals("STRING")) System.out.println("String: " + expectToken.value());
+//        switch (expectToken.type()) {
+//            case "INT" -> { return new IntNode(expectToken); }
+//            case "IDENT" -> { return new IdNode(expectToken); }
+//            case "STRING" -> { return new StringNode(expectToken); }
+//        }
+//        return null; // недостижимое
+//    }
     //
     private Node parseLoopFor() {
         expect(new String[]{"SEP_L_BRACKET"});
         Node init = parseInit();
         expect(new String[]{"SEP_SEMICOLON"});
-        Node condition = parseCondition();
+//        Node condition = parseCondition();
+        Node condition = parseValue("Condition");
         expect(new String[]{"SEP_SEMICOLON"});
         Node expr = parseExpr(); // Прикольно будет (: куски кода \\\ OL_COMMENT переделать
 //        Node expr = parseInit();
@@ -213,7 +260,8 @@ public class Parser {
     }
     private Node parseLoopWhile() {
         expect(new String[]{"SEP_L_BRACKET"});
-        Node condition = parseCondition();
+//        Node condition = parseCondition();
+        Node condition = parseValue("Condition");
         expect(new String[]{"SEP_R_BRACKET"});
         WhileNode whileNode = new WhileNode(condition);
         //
@@ -226,7 +274,7 @@ public class Parser {
     }
     private Node parseStmtIf() {
         expect(new String[]{"SEP_L_BRACKET"});
-        Node condition = parseCondition();
+        Node condition = parseValue("Condition");
         expect(new String[]{"SEP_R_BRACKET"});
         IfElseNode ifElseNode = new IfElseNode(condition);
         //
@@ -245,13 +293,13 @@ public class Parser {
         }
         return ifElseNode;
     }
-    private Node parseCondition() {
-//        Node leftOperand = parseValue();
-        Node leftOperand = parseOpAddSub();
-        Token operator = expect(new String[]{"COMP_LESS", "COMP_L_EQ", "COMP_MORE", "COMP_M_EQ", "COMP_EQ", "COMP_NEQ"});
-//        Node rightOperand = parseValue();
-        Node rightOperand = parseOpAddSub();
-        return new BinOpNode(operator, leftOperand, rightOperand);
-    }
+//    private Node parseCondition() {
+//        Node leftOperand = parseValue(); // OLD
+//        Node leftOperand = parseOpAddSub();
+//        Token operator = expect(new String[]{"COMP_LESS", "COMP_L_EQ", "COMP_MORE", "COMP_M_EQ", "COMP_EQ", "COMP_NEQ"});
+//        Node rightOperand = parseValue(); // OLD
+//        Node rightOperand = parseOpAddSub();
+//        return new BinOpNode(operator, leftOperand, rightOperand);
+//    }
     //
 }
