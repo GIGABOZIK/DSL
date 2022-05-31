@@ -60,7 +60,6 @@ public class Interpreter {
                 }
             }
         }
-
         // FOR, WHILE, IF-ELSE
         if (node.getClass().equals(IfElseNode.class)) {
             if ("true".equals(executeNode(((IfElseNode) node).getCondition()))) {
@@ -77,11 +76,15 @@ public class Interpreter {
         }
         if (node.getClass().equals(ForNode.class)) {
             executeNode(((ForNode) node).getInit());
-            // ...
+            while (executeNode(((ForNode) node).getCondition()).equals("true")) {
+                for (Node expr : ((ForNode) node).getExprs()) executeNode(expr);
+                executeNode(((ForNode) node).getExpr());
+            }
         }
         if (node.getClass().equals(WhileNode.class)) {
-            executeNode(((WhileNode) node).getCondition());
-            // ...
+            while (executeNode(((WhileNode) node).getCondition()).equals("true")) {
+                for (Node expr : ((WhileNode) node).getExprs()) executeNode(expr);
+            }
         }
         return null;
     }
