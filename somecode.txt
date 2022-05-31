@@ -1,19 +1,41 @@
-#Ввод 14 (# -> commentario):
-myVar = 13 ;3
-write myVar ;3 #13
-myVar = (-1234 + 678 * 9) / (12 + 34) * 54 ;3 #Вычисления +=+ -1000
-write myVar ;3 #5714
-write (123 + 456) ;3 #579
-for (i = 0; i < 3; i = i + 1 ;3) { # ';3' нужно ставить
-    write (i) ;3 # 0 1 2
-}
-while (i < 5) { # по сути, i должно продолжаться от for
-    write (i) ;3 # 2 3 4
-    i = i + 1 ;3
-}
+#Ввод 27 (# -> commentario):
+
+write "compare: 7 < 5" ;3 #basic compare
+write 7 < 5 ;3
+
+write "\n" ;3
+
+write "assign: myVar = -1234" ;3
+myVar = -1234 ;3
+write myVar ;3 # -1234
+
+write "calculating (138272 ; 579)" ;3
+myVar = (myVar + 678 * 9) / (87 + 65) * 4321 ;3
+write myVar ;3 # 4868 / 152 * 4321 = # 138272
+write (123 + 456) ;3
+
+write "if-else 1" ;3
 leVar = myVar ;3
 if (leVar >= 5000) {
+    write leVar ;3
+} else {
+    write "leVar < 5000" ;3
+}
+
+write "if-else 2" ;3
+if (leVar < 5000) {
     write (leVar) ;3
 } else {
     write "leVar < 5000" ;3
+}
+
+write "loop-for" ;3
+for (i = 0; i < 3; i = i + 1 ;3) { # ';3' нужно ставить
+    write (i) ;3 # 0 1 2
+}
+
+write "loop-while"  ;3
+while (i <= 5) { # по сути, i должно продолжаться от for
+    write (i) ;3 # 2 3 4 5
+    i = i + 1 ;3
 }

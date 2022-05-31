@@ -34,8 +34,8 @@ public class Main {
     //
     public static void main2() {
         // Сразу результат по стандартным параметрам (чтение из файла)
-//        for (Token token : new Lexer().getTokens()) System.out.println(token);
+        for (Token token : new Lexer().getTokens()) System.out.println(token);
 //        new Parser().parseLang();
-        new Interpreter().execute();
+//        new Interpreter().execute();
     }
 }

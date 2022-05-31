@@ -105,18 +105,19 @@ public class Parser {
             }
             case "KW_WRITE" -> { // io_console
 //                expect(new String[]{"SEP_L_BRACKET"});
-                Token string = seekToken(new String[]{"STRING"}); // Строки обрабатывать отдельно
-                Node valueToPrint = (string != null) ? new StringNode(expectToken) : parseValue();
-
+//                Token string = seekToken(new String[]{"STRING"}); // Строки обрабатывать отдельно
+//                Node valueToPrint = (string != null) ? new StringNode(string) : parseValue();
+                Node valueToPrint = parseValue();
 //                expect(new String[]{"SEP_R_BRACKET"});
                 expect(new String[]{"SEP_END_LINE"});
                 return new UnOpNode(expectToken, valueToPrint);
             } // + KW_READ ???
-            case "OL_COMMENT" -> {
+            default -> {
+//            case "OL_COMMENT" -> {
                 return parseExpr(); // сделано для пропуска OL_COMMENT и сделано в seekToken() // null
             }
         }
-        return null; // недостижимое
+//        return null; // недостижимое
     }
     //
     private Node parseInit() {
@@ -127,6 +128,23 @@ public class Parser {
     }
     private Node parseValue() {
         // Организовано в порядке приоритета операций:
+        // * Возвращает сравнение, либо:
+        // * Возвращает операцию слож-выч,
+        // * * либо операцию умн-дел,
+        // * * * либо узел в скобках,
+        // * * * * либо одиночное значение
+        Node leftOperand = parseOpAddSub();
+//        Node leftOperand = parseOpMulDiv();
+        Token operator = seekToken(new String[]{"COMP_LESS", "COMP_L_EQ", "COMP_MORE", "COMP_M_EQ", "COMP_EQ", "COMP_NEQ"});
+        while (operator != null) {
+            Node rightOperand = parseOpAddSub();
+//            Node rightOperand = parseOpMulDiv();
+            leftOperand = new BinOpNode(operator, leftOperand, rightOperand);
+            operator = seekToken(new String[]{"COMP_LESS", "COMP_L_EQ", "COMP_MORE", "COMP_M_EQ", "COMP_EQ", "COMP_NEQ"});
+        }
+        return leftOperand;
+    }
+    private Node parseOpAddSub() {
         // * Возвращает операцию слож-выч,
         // * * либо операцию умн-дел,
         // * * * либо узел в скобках,
@@ -163,12 +181,14 @@ public class Parser {
         }
         return parseUnValue();
     }
-    private Node parseUnValue() { // ТОЛЬКО INT, IDENT
+    private Node parseUnValue() { // ТОЛЬКО INT, IDENT ??
         // * Возвращает одиночное значение
-        Token expectToken = expect(new String[]{"INT", "IDENT"});
+        Token expectToken = expect(new String[]{"INT", "IDENT", "STRING"});
+        if (expectToken.type().equals("STRING")) System.out.println("String: " + expectToken.value());
         switch (expectToken.type()) {
             case "INT" -> { return new IntNode(expectToken); }
             case "IDENT" -> { return new IdNode(expectToken); }
+            case "STRING" -> { return new StringNode(expectToken); }
         }
         return null; // недостижимое
     }
@@ -226,9 +246,11 @@ public class Parser {
         return ifElseNode;
     }
     private Node parseCondition() {
-        Node leftOperand = parseValue();
+//        Node leftOperand = parseValue();
+        Node leftOperand = parseOpAddSub();
         Token operator = expect(new String[]{"COMP_LESS", "COMP_L_EQ", "COMP_MORE", "COMP_M_EQ", "COMP_EQ", "COMP_NEQ"});
-        Node rightOperand = parseValue();
+//        Node rightOperand = parseValue();
+        Node rightOperand = parseOpAddSub();
         return new BinOpNode(operator, leftOperand, rightOperand);
     }
     //

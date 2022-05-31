@@ -8,21 +8,21 @@ ___
 ___
 ## Укороченный вариант:
 * lang -> expr+
-* expr -> (assign_expr | stmt_if | loop_while | loop_for | io_console)
-  * assign_expr -> init_expr ';3'
-    * init_expr -> IDENT ASSIGN_OP value
-      * value(operation) -> INT | IDENT | STRING | op_mul_div* | op_add_sub* | brackets_op
-        * brackets_op -> '(' value ')'
-        * op_mul_div -> value (MUL_OP | DIV_OP) value
-        * op_add_sub -> value (ADD_OP | SUB_OP) value
-  * io_console -> KW_WRITE value ';3'            $$ KW_READ..
-  * stmt_loop_while -> KW_WHILE '(' condition ')' stmt_body
-    * condition -> operation (comp_opr) operation
-      * comp_opr -> COMP_LESS | COMP_L_EQ | COMP_MORE | COMP_M_EQ | COMP_EQ | COMP_NEQ 
-    * stmt_body -> '{' expr '}'
-  * stmt_loop_for -> KW_FOR '(' init(assign) ';' condition ';' expr ')' stmt_body
-  * stmt_if -> KW_IF '(' condition ')' stmt_body stmt_else?
-    * stmt_else -> KW_ELSE stmt_body
+  * expr -> (assign_expr | stmt_if | loop_while | loop_for | io_console)
+    * assign_expr -> init_expr ';3'
+      * init_expr -> IDENT ASSIGN_OP value
+        * value(operation) -> INT | IDENT | STRING | op_mul_div* | op_add_sub* | brackets_op
+          * brackets_op -> '(' value ')'
+          * op_mul_div -> value (MUL_OP | DIV_OP) value
+          * op_add_sub -> value (ADD_OP | SUB_OP) value
+    * io_console -> KW_WRITE value ';3'            $$ KW_READ..
+    * stmt_loop_while -> KW_WHILE '(' condition ')' stmt_body
+      * condition -> operation (comp_opr) operation
+        * comp_opr -> COMP_LESS | COMP_L_EQ | COMP_MORE | COMP_M_EQ | COMP_EQ | COMP_NEQ 
+      * stmt_body -> '{' expr '}'
+    * stmt_loop_for -> KW_FOR '(' init(assign) ';' condition ';' expr ')' stmt_body
+    * stmt_if -> KW_IF '(' condition ')' stmt_body stmt_else?
+      * stmt_else -> KW_ELSE stmt_body
 * Упрощения:
   * '(')' -> SEP_ _BRACKET
   * '{'}' -> SEP_ _BRACE
@@ -63,10 +63,11 @@ ___
                 * for_init -> TYPE_NAME? assign           $$ ???
                 * for_incr -> assign          $$ ???
         * $$ return -> KW_RETURN value?
-    s
-
-### ==== B_NOT ==== ? ==== B_NOT? value
-### ==== SPACE добавить везде... ==== Сделать отдельную версию на копии ==== ?
+* ...
+* Заметки
+  * ==== B_NOT ==== ? ==== B_NOT? value
+  * ==== SPACE добавить везде... ==== Сделать отдельную версию на копии ==== ?
+  * (НЕТ)
 
 ___
 # Попытки в грамматику
@@ -78,61 +79,61 @@ ___
 * for, while, if 
 * функция (с поддержкой вложенных функций в параметрах)
 
-lang -> expr+
-    expr -> init_expr | kw_expr | func_expr | func_decl
-        init_expr -> type? IDENT ASSIGN_OP init_value
-            type -> 
-            init_value -> br_expr | nobr_expr
-                br_expr -> (SEP_L_BRACKET init_value SEP_R_BRACKET)
-                nobr_expr -> (value (op_line init_value)*)
-                    value -> IDENT | INT | STRING | func_expr
-                    op_line -> op_arithmetic | op_compare
-        kw_expr -> kw_while_expr | ...
-            kw_while_expr -> KW_WHILE br_expr SEP_L_BRACE expr+ SEP_R_BRACE
-        func_expr -> IDENT SEP_L_BRACKET parameters? SEP_R_BRACKET
-            parameters -> (value SEP_COMMA)*
-        func_decl -> KW_FUNC IDENT SEP_L_BRACKET parameters_list? SEP_R_BRACKET SEP_L_BRACE expr+ SEP_R_BRACE
+* lang -> expr+
+    * expr -> init_expr | kw_expr | func_expr | func_decl
+        * init_expr -> type? IDENT ASSIGN_OP init_value
+            * type -> 
+            * init_value -> br_expr | nobr_expr
+                * br_expr -> (SEP_L_BRACKET init_value SEP_R_BRACKET)
+                * nobr_expr -> (value (op_line init_value)*)
+                    * value -> IDENT | INT | STRING | func_expr
+                    * op_line -> op_arithmetic | op_compare
+        * kw_expr -> kw_while_expr | ...
+            * kw_while_expr -> KW_WHILE br_expr SEP_L_BRACE expr+ SEP_R_BRACE
+        * func_expr -> IDENT SEP_L_BRACKET parameters? SEP_R_BRACKET
+            * parameters -> (value SEP_COMMA)*
+        * func_decl -> KW_FUNC IDENT SEP_L_BRACKET parameters_list? SEP_R_BRACKET SEP_L_BRACE expr+ SEP_R_BRACE
 
 ### Попытки в for и бесконечные скобки - Nasway:
-lang -> expr+
-expr -> init | for
-    init -> VAR ASSIGN_OP expr_value
-    for -> FOR_KW L_BRACKET (init?|value?) DIV condition? DIV init? R_BRACKET block
-        block -> (L_BRACE expr* R_BRACE) | expr
-        condition -> value (LESS | MORE | EQ) value
-        expr_value -> value (OP value)*
-            value -> VAR | DIGIT
-    br_expr -> (value OP)* L_BRACKET (br_expr|expr_value)+ R_BRACKET (OP value)*
+* lang -> expr+
+* expr -> init | for
+    * init -> VAR ASSIGN_OP expr_value
+    * for -> FOR_KW L_BRACKET (init?|value?) DIV condition? DIV init? R_BRACKET block
+        * block -> (L_BRACE expr* R_BRACE) | expr
+        * condition -> value (LESS | MORE | EQ) value
+        * expr_value -> value (OP value)*
+            * value -> VAR | DIGIT
+    * br_expr -> (value OP)* L_BRACKET (br_expr|expr_value)+ R_BRACKET (OP value)*
 
 ___
 ## chursinov (Github):
-lang -> expr+
-expr -> (if|while_do|do_while) (WHIlE LB condition RB)? ASSIGN_OP (expr_val)+ ENDLINE
-    if -> IF LB condition RB
-        condition -> VAR COMPARISON_OP (expr_val)+
-            expr_val -> value | OP_VALUE
-                value -> VAR | DIGIT
-    while_do -> WHILE LB condition RB
-    do_while -> DO
+* lang -> expr+
+* expr -> (if|while_do|do_while) (WHIlE LB condition RB)? ASSIGN_OP (expr_val)+ ENDLINE
+    * if -> IF LB condition RB
+        * condition -> VAR COMPARISON_OP (expr_val)+
+            * expr_val -> value | OP_VALUE
+                * value -> VAR | DIGIT
+    * while_do -> WHILE LB condition RB
+    * do_while -> DO
 
 ___
 ## Тёма:
-lang -> expr+
-expr -> (expr_assign | if_op | while_op | for_op | func) NEXTCOM
-    expr_assign -> VAR ASSIGN_OP expr_value
-        expr_value -> (value | expr_br) (OP value)*
-            expr_br -> L_BRACKET expr_value R_BRACKET
-            value -> VAR | DIGIT
-    if_op -> IF L_BRACKET condition R_BRACKET body (else_op){0,1}
-        body -> L_BRACE expr R_BRACE
-            else_op -> ELSE body
-        condition -> VAR COMP_OP value
-    while_op -> WHILE L_BRACKET condition R_BRACKET body
-    func -> FUNC_NAME L_BRACKET (func_param)* R_BRACKET body
-        func_param -> (VAR | DIV func_param)*
+* lang -> expr+
+* expr -> (expr_assign | if_op | while_op | for_op | func) NEXTCOM
+    * expr_assign -> VAR ASSIGN_OP expr_value
+        * expr_value -> (value | expr_br) (OP value)*
+            * expr_br -> L_BRACKET expr_value R_BRACKET
+            * value -> VAR | DIGIT
+    * if_op -> IF L_BRACKET condition R_BRACKET body (else_op){0,1}
+        * body -> L_BRACE expr R_BRACE
+            * else_op -> ELSE body
+        * condition -> VAR COMP_OP value
+    * while_op -> WHILE L_BRACKET condition R_BRACKET body
+    * func -> FUNC_NAME L_BRACKET (func_param)* R_BRACKET body
+        * func_param -> (VAR | DIV func_param)*
 
 ___
-## Пояснение:
+## Наброски:
 
 1) Выражения
    1) Выражение в скобках (поддержка бесконечных скобок)
@@ -164,9 +165,9 @@ ___
 6) 
 
 ///
-expr -> declaration | initialization | action
-    declaration -> decl_class | decl_func | decl_var
-    initialization -> decl_var? init_var
+* expr -> declaration | initialization | action
+    * declaration -> decl_class | decl_func | decl_var
+    * initialization -> decl_var? init_var
 ///
 
 
@@ -175,29 +176,29 @@ expr -> declaration | initialization | action
 2) Инициализировать (initialize)
 3) Выполнить остальное
 
-! main_func
-
-func_decl
-param_decl
-stmt_decl
-var_decl -> type    variable
-
-func_list -> func_def+
-func_def -> type    funcname    param_list  block
-
-block -> var_decl_list  stmt_list
-var_decl_list -> var_decl+
-stmt_list ->    assign_stmt+
-    assign_stmt -> variable  operation
-    operation -> 
-
-binary_operator
-compare_operator
-math_operator
-
-while, for
-
-return
+* ! main_func
+*  
+* func_decl
+* param_decl
+* stmt_decl
+* var_decl -> type    variable
+*  
+* func_list -> func_def+
+* func_def -> type    funcname    param_list  block
+*  
+* block -> var_decl_list  stmt_list
+* var_decl_list -> var_decl+
+* stmt_list ->    assign_stmt+
+    * assign_stmt -> variable  operation
+    * operation -> 
+*  
+* binary_operator
+* compare_operator
+* math_operator
+*  
+* while, for
+*  
+* return
 
 
 

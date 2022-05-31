@@ -31,7 +31,8 @@ public class CodeReader {
         int i = 0;
         while (sc != null && sc.hasNextLine()) {
             strList.add(i, sc.nextLine());
-            if (strList.get(i++).isEmpty()) {
+//            if (strList.get(i++).isEmpty()) {
+            if (strList.get(i++).equals("END")) {
                 strList.remove(i - 1);
                 break;
             }
