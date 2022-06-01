@@ -150,7 +150,7 @@ public class Parser {
                 if (operator != null) {
                     Node rightOperand = parseValue(expected, select + 1);
                     leftOperand = new BinOpNode(operator, leftOperand, rightOperand);
-                    operator = seekToken(operators.get(op));
+//                    operator = seekToken(operators.get(op));
                 }
                 return leftOperand;
             }
