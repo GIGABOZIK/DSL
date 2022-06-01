@@ -6,7 +6,7 @@ ___
 * LinkedList + HashSet
 
 ___
-## Укороченный вариант:
+## Укороченный вариант (финал04ка):
 * lang -> expr+
   * expr -> (assign_expr | stmt_if | loop_while | loop_for | io_console)
     * assign_expr -> init ';3'
