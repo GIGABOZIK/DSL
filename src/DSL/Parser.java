@@ -134,10 +134,20 @@ public class Parser {
     private Node parseValue(String[] expected, int select) {
         String op = expected[select];
         switch (op) {
-            case "Compare", "AddSub", "MulDiv" -> { // Compare ?? a > b > c > d...
+            case "AddSub", "MulDiv" -> { // Compare ?? a > b > c > d...
                 Node leftOperand = parseValue(expected, select + 1);
                 Token operator = seekToken(operators.get(op));
                 while (operator != null) {
+                    Node rightOperand = parseValue(expected, select + 1);
+                    leftOperand = new BinOpNode(operator, leftOperand, rightOperand);
+                    operator = seekToken(operators.get(op));
+                }
+                return leftOperand;
+            }
+            case "Compare" -> { // Compare ?? a > b > c > d...
+                Node leftOperand = parseValue(expected, select + 1);
+                Token operator = seekToken(operators.get(op));
+                if (operator != null) {
                     Node rightOperand = parseValue(expected, select + 1);
                     leftOperand = new BinOpNode(operator, leftOperand, rightOperand);
                     operator = seekToken(operators.get(op));

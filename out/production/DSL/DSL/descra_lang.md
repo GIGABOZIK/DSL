@@ -26,8 +26,8 @@ ___
     * stmt_if -> KW_IF '(' condition ')' stmt_body stmt_else?
       * stmt_else -> KW_ELSE stmt_body
 * Упрощения:
-  * '(')' -> SEP_ _BRACKET
-  * '{'}' -> SEP_ _BRACE
+  * '(')' -> SEP_ 'L'R' _BRACKET
+  * '{'}' -> SEP_ 'L'R' _BRACE
   * ';' -> SEP_SEMICOLON
   * ';3' -> SEP_END_LINE
 

@@ -12,7 +12,7 @@ ___
     * assign_expr -> init ';3'
       * init -> IDENT ASSIGN_OP value
         * value -> Compare | Condition | AddSub | MulDiv | Brackets | UnValue
-          * Compare -> value (comp_token value)*
+          * Compare -> value (comp_token value)?
             * comp_token -> COMP_LESS | COMP_L_EQ | COMP_MORE | COMP_M_EQ | COMP_EQ | COMP_NEQ
           * condition -> value comp_token value
           * AddSub -> value (ADD_OP | SUB_OP value)*
@@ -26,8 +26,8 @@ ___
     * stmt_if -> KW_IF '(' condition ')' stmt_body stmt_else?
       * stmt_else -> KW_ELSE stmt_body
 * Упрощения:
-  * '(')' -> SEP_ _BRACKET
-  * '{'}' -> SEP_ _BRACE
+  * '(')' -> SEP_ 'L'R' _BRACKET
+  * '{'}' -> SEP_ 'L'R' _BRACE
   * ';' -> SEP_SEMICOLON
   * ';3' -> SEP_END_LINE
 
