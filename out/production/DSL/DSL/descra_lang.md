@@ -6,13 +6,13 @@ ___
 * LinkedList + HashSet
 
 ___
-## Укороченный вариант:
+## Укороченный вариант (финал04ка):
 * lang -> expr+
   * expr -> (assign_expr | stmt_if | loop_while | loop_for | io_console)
     * assign_expr -> init ';3'
       * init -> IDENT ASSIGN_OP value
         * value -> Compare | Condition | AddSub | MulDiv | Brackets | UnValue
-          * Compare -> value (comp_token value)*
+          * Compare -> value (comp_token value)?
             * comp_token -> COMP_LESS | COMP_L_EQ | COMP_MORE | COMP_M_EQ | COMP_EQ | COMP_NEQ
           * condition -> value comp_token value
           * AddSub -> value (ADD_OP | SUB_OP value)*
